@@ -5,7 +5,7 @@ import {
   LogOutIcon,
   GraduationCapIcon,
 } from "lucide-react";
-import ThemeSelector from "./ThemeSelector";
+
 import useLogout from "../hooks/useLogout";
 
 const Navbar = () => {
@@ -37,8 +37,6 @@ const Navbar = () => {
               <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
             </button>
           </Link>
-
-          <ThemeSelector />
 
           {/* User Profile Dropdown */}
           <div className="dropdown dropdown-end">
