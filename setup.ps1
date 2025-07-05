@@ -1,8 +1,8 @@
-# Fluento Project Setup Script for Windows PowerShell
-# This script helps you set up the Fluento project quickly
+# LangBridge Project Setup Script for Windows PowerShell
+# This script helps you set up the LangBridge project quickly
 
-Write-Host "🌍 Welcome to Fluento Setup!" -ForegroundColor Green
-Write-Host "This script will help you set up the Fluento language learning platform." -ForegroundColor Cyan
+Write-Host "🌍 Welcome to LangBridge Setup!" -ForegroundColor Green
+Write-Host "This script will help you set up the LangBridge language learning platform." -ForegroundColor Cyan
 Write-Host ""
 
 # Check if Node.js is installed

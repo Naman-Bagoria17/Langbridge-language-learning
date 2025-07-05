@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Fluento Project Setup Script for Unix/Linux/Mac
-# This script helps you set up the Fluento project quickly
+# LangBridge Project Setup Script for Unix/Linux/Mac
+# This script helps you set up the LangBridge project quickly
 
-echo "🌍 Welcome to Fluento Setup!"
-echo "This script will help you set up the Fluento language learning platform."
+echo "🌍 Welcome to LangBridge Setup!"
+echo "This script will help you set up the LangBridge language learning platform."
 echo ""
 
 # Check if Node.js is installed
