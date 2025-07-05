@@ -1,0 +1,23 @@
+services:
+  # Frontend (Static Site)
+  - type: web
+    name: langbridge-frontend
+    env: static
+    buildCommand: npm run build
+    staticPublishPath: ./FRONTEND/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  # Backend (Web Service)
+  - type: web
+    name: langbridge-backend
+    env: node
+    buildCommand: npm install --prefix BACKEND
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
