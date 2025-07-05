@@ -1,0 +1,238 @@
+/* -------------------------------------------------- */
+/*  Tailwind layers                                    */
+/* -------------------------------------------------- */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* -------------------------------------------------- */
+/*  Fonts & Globals                                    */
+/* -------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+html {
+  color-scheme: light;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  /* page background (feel free to change) */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  color: #1e293b;
+  /* slate‑800 */
+  min-height: 100vh;
+}
+
+/* -------------------------------------------------- */
+/*  Cards – NO BLUR                                    */
+/* -------------------------------------------------- */
+.modern-card {
+  background: #ffffff;
+  /* solid */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 8px 32px rgba(31, 38, 135, 0.37),
+    0 4px 16px rgba(31, 38, 135, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow:
+    0 25px 50px rgba(31, 38, 135, 0.4),
+    0 15px 35px rgba(31, 38, 135, 0.25);
+  border-color: rgba(102, 126, 234, 0.5);
+}
+
+/* crisp card used for recommendations / friends */
+.professional-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #ffffff;
+  /* solid */
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.professional-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.professional-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.05), transparent);
+  transition: left 0.6s ease;
+}
+
+.professional-card:hover::before {
+  left: 100%;
+}
+
+/* glass‑effect class rewritten as solid white */
+.glass-effect {
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* -------------------------------------------------- */
+/*  Gradient / utility text                           */
+/* -------------------------------------------------- */
+.gradient-text {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* -------------------------------------------------- */
+/*  Chat (Stream) layout                              */
+/* -------------------------------------------------- */
+.str-chat__channel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e2e8f0;
+  /* solid slate‑100 */
+  height: 100%;
+}
+
+.str-chat__container {
+  max-width: 1200px;
+  width: 100%;
+  height: 85% !important;
+  margin: 0 auto !important;
+  border-radius: 16px;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.str-chat__list {
+  background: #ffffff;
+  padding: 16px;
+}
+
+.str-chat__list-notifications {
+  display: none;
+}
+
+.str-chat__message-input {
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+/* -------------------------------------------------- */
+/*  Inputs                                            */
+/* -------------------------------------------------- */
+.modern-input {
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: #1e293b;
+  transition: all .3s cubic-bezier(.4, 0, .2, 1);
+}
+
+.modern-input:focus {
+  border-color: #3b82f6;
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, .1),
+    0 4px 6px -1px rgba(0, 0, 0, .1);
+}
+
+.modern-input::placeholder {
+  color: #94a3b8;
+}
+
+/* -------------------------------------------------- */
+/*  Buttons                                           */
+/* -------------------------------------------------- */
+.modern-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, .4);
+  transition: all .3s ease;
+}
+
+.modern-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, .6);
+  background: linear-gradient(135deg, #5a67d8 0%, #667eea 100%);
+}
+
+/* -------------------------------------------------- */
+/*  Scrollbar                                         */
+/* -------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* -------------------------------------------------- */
+/*  Animations & misc                                 */
+/* -------------------------------------------------- */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0)
+  }
+
+  50% {
+    transform: translateY(-10px)
+  }
+}
+
+.float-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0
+  }
+
+  100% {
+    background-position: 200% 0
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.pulse-slow {
+  animation: pulse 3s cubic-bezier(.4, 0, .6, 1) infinite;
+}
+
+/* -------------------------------------------------- */
+/*  Hard override – remove any leftover blur          */
+/* -------------------------------------------------- */
+* {
+  backdrop-filter: none !important;
+}
