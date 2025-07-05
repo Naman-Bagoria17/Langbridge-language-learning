@@ -24,7 +24,7 @@ const Navbar = () => {
               <GraduationCapIcon className="w-4 h-4 text-white" />
             </div>
             <Link to="/" className="text-xl font-bold">
-              Fluento
+              LangBridge
             </Link>
           </div>
         )}

@@ -11,7 +11,8 @@ export default {
   },
   plugins: [
     daisyui
-  ], daisyui: {
+  ],
+  daisyui: {
     themes: [
       "business",
       "corporate",
@@ -23,6 +24,7 @@ export default {
       "winter",
       "autumn",
       "dracula",
+      "slate",
       {
         "professional": {
           "primary": "#2563eb",
