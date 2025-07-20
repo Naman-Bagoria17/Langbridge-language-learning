@@ -81,12 +81,7 @@ const ChatPage = () => {
   if (loading || !chatClient || !channel) return <ChatLoader />;
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
-      {/* Floating background blobs */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute w-[600px] h-[600px] bg-emerald-500/10 rounded-full top-[-20%] left-[-20%] blur-3xl animate-float-slow" />
-        <div className="absolute w-[500px] h-[500px] bg-cyan-500/10 rounded-full bottom-[-15%] right-[-15%] blur-2xl animate-float-medium" />
-      </div>
+    <div className="relative min-h-screen bg-base-100">
 
       <div className="relative z-10 h-[93vh] p-4">
         <Chat client={chatClient}>

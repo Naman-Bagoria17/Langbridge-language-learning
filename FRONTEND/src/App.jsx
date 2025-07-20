@@ -13,10 +13,14 @@ import { Toaster } from "react-hot-toast";
 import PageLoader from "./components/PageLoader.jsx";
 import useAuthUser from "./hooks/useAuthUser.js";
 import Layout from "./components/Layout.jsx";
+import { useThemeInitializer } from "./hooks/useTheme.js";
 
 
 const App = () => {
   const { isLoading, authUser } = useAuthUser();
+
+  // Initialize theme from localStorage on app start
+  useThemeInitializer();
 
   const isAuthenticated = Boolean(authUser);
   const isOnboarded = authUser?.isOnboarded;

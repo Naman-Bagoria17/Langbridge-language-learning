@@ -3,25 +3,27 @@ import { LANGUAGE_TO_FLAG } from "../constants";
 
 const FriendCard = ({ friend }) => {
   return (
-    <div className="bg-slate-800 border border-slate-600 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 p-4 space-y-4 hover:bg-slate-700">
+    <div className="card bg-base-200 border border-base-300 shadow-xl hover:shadow-2xl transition-all duration-300 p-4 space-y-4 hover:bg-base-300">
       {/* Avatar and Name */}
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-emerald-400">
-          <img
-            src={friend.profilePic}
-            alt={friend.fullName}
-            className="w-full h-full object-cover"
-          />
+        <div className="avatar">
+          <div className="w-12 h-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+            <img
+              src={friend.profilePic}
+              alt={friend.fullName}
+              className="w-full h-full object-cover"
+            />
+          </div>
         </div>
-        <h3 className="font-semibold text-white truncate">{friend.fullName}</h3>
+        <h3 className="font-semibold text-base-content truncate">{friend.fullName}</h3>
       </div>
 
       {/* Languages */}
       <div className="flex flex-wrap gap-2 text-sm">
-        <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-600 text-white rounded-full text-xs font-medium">
+        <span className="badge badge-primary gap-1">
           {getLanguageFlag(friend.nativeLanguage)} Native: {friend.nativeLanguage}
         </span>
-        <span className="inline-flex items-center gap-1 px-2 py-1 bg-cyan-600 text-white rounded-full text-xs font-medium">
+        <span className="badge badge-secondary gap-1">
           {getLanguageFlag(friend.learningLanguage)} Learning: {friend.learningLanguage}
         </span>
       </div>
@@ -29,7 +31,7 @@ const FriendCard = ({ friend }) => {
       {/* Message Button */}
       <Link
         to={`/chat/${friend._id}`}
-        className="block w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white py-2 px-4 rounded-lg font-medium text-center transition-colors"
+        className="btn btn-primary w-full"
       >
         Message
       </Link>

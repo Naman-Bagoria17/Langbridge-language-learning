@@ -13,14 +13,14 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 hidden lg:flex flex-col h-screen sticky top-0 bg-white/5 border-r border-white/10 shadow-md backdrop-blur-lg text-white">
+    <aside className="w-64 hidden lg:flex flex-col h-screen sticky top-0 bg-base-200 border-r border-base-300 shadow-md">
       {/* Logo */}
-      <div className="p-6 border-b border-white/10">
+      <div className="p-6 border-b border-base-300">
         <Link to="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-tr from-emerald-500 to-cyan-500 rounded-xl flex items-center justify-center">
-            <GraduationCapIcon className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+            <GraduationCapIcon className="w-5 h-5 text-primary-content" />
           </div>
-          <span className="text-2xl font-bold">LangBridge</span>
+          <span className="text-2xl font-bold text-base-content">LangBridge</span>
         </Link>
       </div>
 
@@ -33,8 +33,8 @@ const Sidebar = () => {
               to={path}
               key={path}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${isActive
-                ? "bg-emerald-600/20 border-l-4 border-emerald-400 text-white"
-                : "hover:bg-white/10 text-slate-300"
+                ? "bg-primary/20 border-l-4 border-primary text-base-content"
+                : "hover:bg-base-300 text-base-content/70"
                 }`}
             >
               <Icon className="w-5 h-5" />
@@ -45,14 +45,19 @@ const Sidebar = () => {
       </nav>
 
       {/* User info */}
-      <div className="p-4 border-t border-white/10 mt-auto">
-        <div className="flex items-center gap-3 bg-white/10 p-3 rounded-lg">
-          <div className="w-10 h-10 rounded-full overflow-hidden border border-white/10">
-            <img src={authUser?.profilePic} alt="Profile" />
+      <div className="p-4 border-t border-base-300 mt-auto">
+        <div className="flex items-center gap-3 bg-base-300 p-3 rounded-lg">
+          <div className="avatar">
+            <div className="w-10 h-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-1">
+              <img src={authUser?.profilePic} alt="Profile" className="w-full h-full object-cover" />
+            </div>
           </div>
           <div>
-            <p className="text-sm font-semibold">{authUser?.fullName}</p>
-            <p className="text-xs text-emerald-400">Online</p>
+            <p className="text-sm font-semibold text-base-content">{authUser?.fullName}</p>
+            <p className="text-xs text-success flex items-center gap-1">
+              <span className="w-2 h-2 bg-success rounded-full"></span>
+              Online
+            </p>
           </div>
         </div>
       </div>

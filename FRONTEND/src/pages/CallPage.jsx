@@ -70,7 +70,7 @@ const CallPage = () => {
   if (isLoading || isConnecting) return <PageLoader />;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="min-h-screen flex items-center justify-center bg-base-100">
       <div className="w-full max-w-7xl h-[90vh] rounded-lg overflow-hidden shadow-xl">
         {client && call ? (
           <StreamVideo client={client}>
@@ -79,7 +79,7 @@ const CallPage = () => {
             </StreamCall>
           </StreamVideo>
         ) : (
-          <p className="text-center text-slate-300">Could not initialize call.</p>
+          <p className="text-center text-base-content/70">Could not initialize call.</p>
         )}
       </div>
     </div>

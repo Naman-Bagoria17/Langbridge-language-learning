@@ -32,25 +32,19 @@ const NotificationsPage = () => {
   const accepted = friendRequests?.acceptedReqs || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden flex items-start justify-center p-6">
-      {/* Floating background blobs */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute w-[500px] h-[500px] bg-emerald-500/10 rounded-full top-[-15%] left-[-10%] blur-3xl float-slow" />
-        <div className="absolute w-[350px] h-[350px] bg-cyan-400/10 rounded-full bottom-[-10%] right-[-10%] blur-2xl float-medium" />
-      </div>
-
-      <div className="relative z-10 w-full max-w-3xl bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-8 space-y-10">
+    <div className="min-h-screen bg-base-100 relative overflow-hidden flex items-start justify-center p-6">
+      <div className="relative z-10 w-full max-w-3xl bg-base-200 border border-base-300 rounded-2xl shadow-2xl p-8 space-y-10">
         {/* Page header */}
         <header>
-          <h1 className="text-3xl font-bold text-white">Notifications</h1>
-          <p className="text-slate-300 text-sm">
+          <h1 className="text-3xl font-bold text-base-content">Notifications</h1>
+          <p className="text-base-content/70 text-sm">
             Manage your friend requests and updates
           </p>
         </header>
 
         {isLoading ? (
           <div className="flex justify-center py-20">
-            <div className="w-10 h-10 border-4 border-slate-500/30 border-t-emerald-500 rounded-full animate-spin" />
+            <span className="loading loading-spinner loading-lg text-primary"></span>
           </div>
         ) : (
           <>
@@ -68,19 +62,19 @@ const NotificationsPage = () => {
                 {incoming.map((req) => (
                   <div
                     key={req._id}
-                    className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-xl p-5 shadow-md hover:shadow-emerald-600/10 transition"
+                    className="flex items-center gap-4 bg-base-300 border border-base-300 rounded-xl p-5 shadow-md hover:shadow-lg transition"
                   >
                     <img
                       src={req.sender.profilePic}
                       alt={req.sender.fullName}
-                      className="w-12 h-12 rounded-full border-2 border-emerald-400 object-cover"
+                      className="w-12 h-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 object-cover"
                     />
 
                     <div className="flex-1">
-                      <h3 className="text-white font-semibold">
+                      <h3 className="text-base-content font-semibold">
                         {req.sender.fullName}
                       </h3>
-                      <p className="text-slate-400 text-xs mt-0.5">
+                      <p className="text-base-content/70 text-xs mt-0.5">
                         Native: {req.sender.nativeLanguage} • Learning:{" "}
                         {req.sender.learningLanguage}
                       </p>
@@ -89,7 +83,7 @@ const NotificationsPage = () => {
                     <button
                       disabled={isPending}
                       onClick={() => acceptRequestMutation(req._id)}
-                      className="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition disabled:opacity-50"
+                      className="btn btn-primary btn-sm"
                     >
                       Accept
                     </button>
@@ -101,7 +95,7 @@ const NotificationsPage = () => {
             {/* Accepted Notifications */}
             {accepted.length > 0 && (
               <section className="space-y-6">
-                <h2 className="flex items-center gap-2 text-xl font-semibold text-cyan-300">
+                <h2 className="flex items-center gap-2 text-xl font-semibold text-secondary">
                   <BellIcon className="w-5 h-5" />
                   New Connections
                 </h2>
@@ -109,22 +103,22 @@ const NotificationsPage = () => {
                 {accepted.map((note) => (
                   <div
                     key={note._id}
-                    className="flex items-start gap-4 bg-white/5 border border-white/10 rounded-xl p-5 shadow-md"
+                    className="flex items-start gap-4 bg-base-300 border border-base-300 rounded-xl p-5 shadow-md"
                   >
                     <img
                       src={note.recipient.profilePic}
                       alt={note.recipient.fullName}
-                      className="w-10 h-10 rounded-full border-2 border-cyan-400 object-cover mt-0.5"
+                      className="w-10 h-10 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2 object-cover mt-0.5"
                     />
 
                     <div className="flex-1">
-                      <p className="text-white text-sm">
+                      <p className="text-base-content text-sm">
                         <span className="font-semibold">
                           {note.recipient.fullName}
                         </span>{" "}
                         accepted your friend request
                       </p>
-                      <p className="text-xs flex items-center text-slate-400 mt-1">
+                      <p className="text-xs flex items-center text-base-content/70 mt-1">
                         <ClockIcon className="w-3 h-3 mr-1" />
                         Recently
                       </p>

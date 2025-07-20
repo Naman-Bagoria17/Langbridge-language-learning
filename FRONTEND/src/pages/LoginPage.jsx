@@ -22,24 +22,18 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center relative overflow-hidden">
-      {/* Background Blobs */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute w-[700px] h-[700px] bg-emerald-500/5 rounded-full top-[-20%] left-[-20%] blur-3xl" />
-        <div className="absolute w-[500px] h-[500px] bg-cyan-500/10 rounded-full bottom-[-15%] right-[-10%] blur-2xl" />
-      </div>
-
-      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 grid-cols-1 z-10 relative shadow-2xl rounded-3xl overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 animate-fade-in">
+    <div className="min-h-screen bg-base-100 flex items-center justify-center relative overflow-hidden">
+      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 grid-cols-1 z-10 relative shadow-2xl rounded-3xl overflow-hidden bg-base-200 border border-base-300">
         {/* Left: Info and Features */}
-        <div className="p-10 text-white flex flex-col justify-center space-y-10 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-900 relative">
+        <div className="p-10 flex flex-col justify-center space-y-10 bg-base-300 relative">
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 bg-gradient-to-tr from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center">
-              <GraduationCapIcon className="w-7 h-7 text-white" />
+            <div className="w-14 h-14 bg-primary rounded-xl flex items-center justify-center">
+              <GraduationCapIcon className="w-7 h-7 text-primary-content" />
             </div>
-            <h1 className="text-4xl font-extrabold tracking-tight">LangBridge</h1>
+            <h1 className="text-4xl font-extrabold tracking-tight text-base-content">LangBridge</h1>
           </div>
 
-          <p className="text-lg text-slate-300 max-w-md">
+          <p className="text-lg text-base-content/70 max-w-md">
             Learn any language by connecting with real people around the world.
             Practice with native speakers through live video calls.
           </p>
@@ -48,32 +42,32 @@ const LoginPage = () => {
           <div className="space-y-4">
             {[
               {
-                icon: <VideoIcon className="text-emerald-400 w-6 h-6" />,
+                icon: <VideoIcon className="text-primary w-6 h-6" />,
                 title: "Live Video Conversations",
                 subtitle: "Talk directly with fluent native speakers.",
               },
               {
-                icon: <GlobeIcon className="text-emerald-400 w-6 h-6" />,
+                icon: <GlobeIcon className="text-primary w-6 h-6" />,
                 title: "Global Language Exchange",
                 subtitle: "Connect with people from all over the world.",
               },
               {
-                icon: <LanguagesIcon className="text-emerald-400 w-6 h-6" />,
+                icon: <LanguagesIcon className="text-primary w-6 h-6" />,
                 title: "Multilingual Support",
                 subtitle: "Choose from over 30 languages to learn.",
               },
             ].map((item, idx) => (
               <div
                 key={idx}
-                className="group p-5 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300 backdrop-blur-md shadow-md hover:shadow-emerald-600/10"
+                className="group p-5 bg-base-300/50 border border-base-300 rounded-xl hover:bg-base-300 transition-all duration-300 shadow-md"
               >
                 <div className="flex items-center gap-4">
                   <div>{item.icon}</div>
                   <div>
-                    <h4 className="text-lg font-semibold text-white">
+                    <h4 className="text-lg font-semibold text-base-content">
                       {item.title}
                     </h4>
-                    <p className="text-sm text-slate-300">{item.subtitle}</p>
+                    <p className="text-sm text-base-content/70">{item.subtitle}</p>
                   </div>
                 </div>
               </div>
@@ -82,26 +76,26 @@ const LoginPage = () => {
         </div>
 
         {/* Right: Login Form */}
-        <div className="p-10 bg-white/10 backdrop-blur-lg text-white flex items-center justify-center">
+        <div className="p-10 bg-base-200 flex items-center justify-center">
           <div className="w-full max-w-sm">
             <h2 className="text-2xl font-bold mb-2">Welcome Back</h2>
-            <p className="text-slate-300 mb-6">
+            <p className="text-base-content/70 mb-6">
               Sign in to start learning and connecting.
             </p>
 
             {error && (
-              <div className="mb-4 p-3 bg-red-100/20 border border-red-300/40 rounded-md text-sm text-red-400">
+              <div className="mb-4 p-3 bg-error/20 border border-error/40 rounded-md text-sm text-error">
                 {error.response?.data?.message || error.message || "Login error"}
               </div>
             )}
 
             <form onSubmit={handleLogin} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium mb-2">Email</label>
+                <label className="block text-sm font-medium mb-2 text-base-content">Email</label>
                 <input
                   type="email"
                   placeholder="you@example.com"
-                  className="w-full px-4 py-3 bg-slate-900/60 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-emerald-400 transition"
+                  className="input input-bordered w-full bg-base-100 text-base-content placeholder-base-content/50 focus:border-primary"
                   value={loginData.email}
                   onChange={(e) =>
                     setLoginData({ ...loginData, email: e.target.value })
@@ -111,12 +105,12 @@ const LoginPage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Password</label>
+                <label className="block text-sm font-medium mb-2 text-base-content">Password</label>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
-                    className="w-full px-4 py-3 pr-12 bg-slate-900/60 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-emerald-400 transition"
+                    className="input input-bordered w-full pr-12 bg-base-100 text-base-content placeholder-base-content/50 focus:border-primary"
                     value={loginData.password}
                     onChange={(e) =>
                       setLoginData({ ...loginData, password: e.target.value })
@@ -125,7 +119,7 @@ const LoginPage = () => {
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/50 hover:text-base-content"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -140,11 +134,11 @@ const LoginPage = () => {
               <button
                 type="submit"
                 disabled={isPending}
-                className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white py-3 rounded-lg font-semibold transition duration-200 disabled:opacity-50"
+                className="btn btn-primary w-full"
               >
                 {isPending ? (
                   <div className="flex items-center justify-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span className="loading loading-spinner loading-sm"></span>
                     Signing in...
                   </div>
                 ) : (
@@ -152,11 +146,11 @@ const LoginPage = () => {
                 )}
               </button>
 
-              <div className="text-center pt-4 text-slate-400 text-sm">
+              <div className="text-center pt-4 text-base-content/70 text-sm">
                 Don’t have an account?{" "}
                 <Link
                   to="/signup"
-                  className="text-emerald-400 hover:underline hover:text-emerald-300"
+                  className="text-primary hover:underline"
                 >
                   Create one
                 </Link>
