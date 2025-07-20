@@ -1,7 +1,7 @@
 services:
   # Combined Frontend + Backend Service
   - type: web
-    name: langbridge-app
+    name: langbridge-naman-2025
     env: node
     buildCommand: cd FRONTEND && npm ci && npm run build && cd ../BACKEND && npm ci --no-optional --legacy-peer-deps
     startCommand: cd BACKEND && node src/server.js
