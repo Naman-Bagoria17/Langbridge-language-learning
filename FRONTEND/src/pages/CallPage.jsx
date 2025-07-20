@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import useAuthUser from "../hooks/useAuthUser";
 import { useQuery } from "@tanstack/react-query";
 import { getStreamToken } from "../lib/api";
+import { getUserAvatar } from "../utils/avatar";
 
 import {
   StreamVideo,
@@ -43,7 +44,7 @@ const CallPage = () => {
         const user = {
           id: authUser._id,
           name: authUser.fullName,
-          image: authUser.profilePic,
+          image: getUserAvatar(authUser),
         };
 
         const videoClient = new StreamVideoClient({

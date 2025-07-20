@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    avatarConfig: {
+      type: Object,
+      default: null,
+    },
     nativeLanguage: {
       type: String,
       default: "",

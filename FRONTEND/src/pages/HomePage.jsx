@@ -10,6 +10,7 @@ import { CheckCircleIcon, MapPinIcon, UserPlusIcon } from "lucide-react";
 import { capitialize } from "../lib/utils";
 import FriendCard, { getLanguageFlag } from "../components/FriendCard";
 import NoFriendsFound from "../components/NoFriendsFound";
+import { getUserAvatar } from "../utils/avatar";
 
 const HomePage = () => {
   const queryClient = useQueryClient();
@@ -44,9 +45,8 @@ const HomePage = () => {
   }, [outgoingFriendReqs]);
 
   return (
-    <div className="min-h-screen bg-base-100 relative overflow-hidden">
-
-      <div className="relative z-10 px-6 py-10 max-w-7xl mx-auto space-y-14">
+    <div className="w-full">
+      <div className="max-w-7xl mx-auto space-y-12">
         {/* FRIENDS SECTION */}
         <section>
           <h2 className="text-4xl font-bold text-base-content mb-3">Your Friends</h2>
@@ -59,7 +59,7 @@ const HomePage = () => {
           ) : friends.length === 0 ? (
             <NoFriendsFound />
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {friends.map((friend) => (
                 <FriendCard key={friend._id} friend={friend} />
               ))}
@@ -79,18 +79,18 @@ const HomePage = () => {
           ) : recommendedUsers.length === 0 ? (
             <div className="text-center text-base-content/70">No recommendations available at the moment.</div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {recommendedUsers.map((user) => {
                 const alreadyRequested = outgoingRequestsIds.has(user._id);
 
                 return (
                   <div
                     key={user._id}
-                    className="card bg-base-200 border border-base-300 p-6 shadow-xl hover:shadow-2xl transition"
+                    className="card bg-base-200 border border-base-300 p-6 shadow-lg hover:shadow-xl transition h-full flex flex-col"
                   >
                     <div className="flex items-center gap-4 mb-4">
                       <img
-                        src={user.profilePic}
+                        src={getUserAvatar(user)}
                         alt={user.fullName}
                         className="w-16 h-16 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 object-cover"
                       />
@@ -116,7 +116,9 @@ const HomePage = () => {
                     </div>
 
                     {/* Bio */}
-                    {user.bio && <p className="text-base-content/70 text-sm mb-4">{user.bio}</p>}
+                    <div className="flex-1">
+                      {user.bio && <p className="text-base-content/70 text-sm mb-4">{user.bio}</p>}
+                    </div>
 
                     {/* Button */}
                     <button

@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router";
 import useAuthUser from "../hooks/useAuthUser";
 import { BellIcon, HomeIcon, GraduationCapIcon } from "lucide-react";
+import { getUserAvatar } from "../utils/avatar";
 
 const Sidebar = () => {
   const { authUser } = useAuthUser();
@@ -13,7 +14,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 hidden lg:flex flex-col h-screen sticky top-0 bg-base-200 border-r border-base-300 shadow-md">
+    <aside className="w-64 hidden lg:flex flex-col h-screen bg-base-200 border-r border-base-300 shadow-md">
       {/* Logo */}
       <div className="p-6 border-b border-base-300">
         <Link to="/" className="flex items-center gap-3">
@@ -49,7 +50,7 @@ const Sidebar = () => {
         <div className="flex items-center gap-3 bg-base-300 p-3 rounded-lg">
           <div className="avatar">
             <div className="w-10 h-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-1">
-              <img src={authUser?.profilePic} alt="Profile" className="w-full h-full object-cover" />
+              <img src={getUserAvatar(authUser)} alt="Profile" className="w-full h-full object-cover" />
             </div>
           </div>
           <div>

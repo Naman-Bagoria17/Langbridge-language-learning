@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import useAuthUser from "../hooks/useAuthUser";
 import { useQuery } from "@tanstack/react-query";
 import { getStreamToken } from "../lib/api";
+import { getUserAvatar } from "../utils/avatar";
 
 import {
   Channel,
@@ -44,7 +45,7 @@ const ChatPage = () => {
           {
             id: authUser._id,
             name: authUser.fullName,
-            image: authUser.profilePic,
+            image: getUserAvatar(authUser),
           },
           tokenData.token
         );
@@ -81,12 +82,11 @@ const ChatPage = () => {
   if (loading || !chatClient || !channel) return <ChatLoader />;
 
   return (
-    <div className="relative min-h-screen bg-base-100">
-
-      <div className="relative z-10 h-[93vh] p-4">
+    <div className="w-full h-full">
+      <div className="h-[calc(100vh-4rem)]">
         <Chat client={chatClient}>
           <Channel channel={channel}>
-            <div className="w-full h-full relative rounded-xl overflow-hidden backdrop-blur-xl">
+            <div className="w-full h-full relative rounded-xl overflow-hidden">
               <CallButton handleVideoCall={handleVideoCall} />
               <Window>
                 <ChannelHeader />

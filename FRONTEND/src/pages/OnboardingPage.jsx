@@ -13,6 +13,7 @@ import {
   GlobeIcon,
   CameraIcon,
 } from "lucide-react";
+import { getUserAvatar, generateRandomAvatar, avatarConfigToUrl } from "../utils/avatar";
 import { LANGUAGES } from "../constants";
 
 const OnboardingPage = () => {
@@ -25,7 +26,7 @@ const OnboardingPage = () => {
     nativeLanguage: authUser?.nativeLanguage || "",
     learningLanguage: authUser?.learningLanguage || "",
     location: authUser?.location || "",
-    profilePic: authUser?.profilePic || "",
+    avatarConfig: authUser?.avatarConfig || null,
   });
 
   const { mutate: onboardingMutation, isPending } = useMutation({
@@ -45,16 +46,17 @@ const OnboardingPage = () => {
   };
 
   const handleRandomAvatar = () => {
-    const idx = Math.floor(Math.random() * 100) + 1;
-    const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
-    setFormState({ ...formState, profilePic: randomAvatar });
-    toast.success("Random profile picture generated!");
+    const randomConfig = generateRandomAvatar();
+    setFormState({ ...formState, avatarConfig: randomConfig });
+    toast.success("Random avatar generated!");
   };
 
+
+
   return (
-    <div className="min-h-screen bg-base-100 relative flex items-center justify-center p-6 overflow-hidden">
+    <div className="min-h-screen bg-base-100 flex items-center justify-center p-4">
       {/* Container */}
-      <div className="relative z-10 w-full max-w-3xl bg-base-200 border border-base-300 rounded-2xl p-8 shadow-2xl overflow-y-auto max-h-[90vh]">
+      <div className="w-full max-w-4xl bg-base-200 border border-base-300 rounded-2xl p-8 shadow-2xl max-h-[95vh] overflow-y-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-6">
@@ -74,32 +76,37 @@ const OnboardingPage = () => {
           <div className="flex flex-col items-center justify-center space-y-4">
             <div className="avatar">
               <div className="w-32 h-32 rounded-full bg-base-300 ring ring-primary ring-offset-base-100 ring-offset-4 shadow-lg">
-                {formState.profilePic ? (
-                  <img
-                    src={formState.profilePic}
-                    alt="Profile Preview"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="flex items-center justify-center h-full">
-                    <CameraIcon className="w-12 h-12 text-base-content/50" />
-                  </div>
-                )}
+                <img
+                  src={formState.avatarConfig
+                    ? avatarConfigToUrl(formState.avatarConfig)
+                    : getUserAvatar(authUser || { email: 'preview' })
+                  }
+                  alt="Your Avatar"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={handleRandomAvatar}
-              className="btn btn-outline btn-primary"
-            >
-              <ShuffleIcon className="w-4 h-4" />
-              Generate Random Avatar
-            </button>
+            <div className="flex flex-col items-center space-y-2">
+              <button
+                type="button"
+                onClick={handleRandomAvatar}
+                className="btn btn-outline btn-primary"
+              >
+                <ShuffleIcon className="w-4 h-4" />
+                Generate Random Avatar
+              </button>
+              <p className="text-xs text-base-content/70 text-center max-w-xs">
+                {formState.avatarConfig
+                  ? "Custom avatar selected"
+                  : "Default avatar based on your profile"
+                }
+              </p>
+            </div>
           </div>
 
           {/* Form Fields */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium mb-2 text-base-content">
                 <UserIcon className="w-4 h-4 inline mr-2" />
@@ -148,7 +155,7 @@ const OnboardingPage = () => {
             />
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium mb-2 text-base-content">
                 <GlobeIcon className="w-4 h-4 inline mr-2" />

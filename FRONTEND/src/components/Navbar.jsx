@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import ThemeSelector from "./ThemeSelector";
 import useLogout from "../hooks/useLogout";
+import { getUserAvatar } from "../utils/avatar";
 
 const Navbar = () => {
   const { authUser } = useAuthUser();
@@ -53,7 +54,7 @@ const Navbar = () => {
               <div className="avatar">
                 <div className="w-8 h-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-1">
                   <img
-                    src={authUser?.profilePic}
+                    src={getUserAvatar(authUser)}
                     alt="Profile"
                     className="w-full h-full object-cover"
                   />
@@ -63,25 +64,25 @@ const Navbar = () => {
 
             <ul
               tabIndex={0}
-              className="dropdown-content menu p-2 shadow-xl bg-base-200 rounded-xl w-56 border border-base-300"
+              className="dropdown-content menu p-2 shadow-xl bg-base-200 rounded-xl w-64 border border-base-300"
             >
-              <li className="border-b border-base-300 px-3 py-2">
-                <div className="flex items-center gap-3">
-                  <div className="avatar">
+              <li className="border-b border-base-300 px-3 py-3">
+                <div className="flex items-start gap-3 min-w-0">
+                  <div className="avatar flex-shrink-0">
                     <div className="w-10 h-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-1">
-                      <img src={authUser?.profilePic} alt="Profile" className="w-full h-full object-cover" />
+                      <img src={getUserAvatar(authUser)} alt="Profile" className="w-full h-full object-cover" />
                     </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-base-content">{authUser?.fullName}</p>
-                    <p className="text-xs text-base-content/70">{authUser?.email}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-base-content truncate">{authUser?.fullName}</p>
+                    <p className="text-xs text-base-content/70 break-all">{authUser?.email}</p>
                   </div>
                 </div>
               </li>
-              <li className="pt-2">
+              <li className="pt-2 px-1">
                 <button
                   onClick={logoutMutation}
-                  className="btn btn-ghost btn-sm text-error hover:bg-error/10"
+                  className="btn btn-ghost btn-sm text-error hover:bg-error/10 w-full justify-start"
                 >
                   <LogOutIcon className="w-4 h-4" />
                   Sign Out
