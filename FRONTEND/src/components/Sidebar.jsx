@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router";
 import useAuthUser from "../hooks/useAuthUser";
-import { BellIcon, HomeIcon, GraduationCapIcon } from "lucide-react";
+import { BellIcon, HomeIcon, GraduationCapIcon, UsersIcon } from "lucide-react";
 import { getUserAvatar } from "../utils/avatar";
 
 const Sidebar = () => {
@@ -11,6 +11,7 @@ const Sidebar = () => {
   const navItems = [
     { path: "/", icon: HomeIcon, label: "Home" },
     { path: "/notifications", icon: BellIcon, label: "Notifications" },
+    { path: "/friends", icon: UsersIcon, label: "Friends" },
   ];
 
   return (

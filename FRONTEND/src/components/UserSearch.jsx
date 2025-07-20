@@ -82,7 +82,7 @@ const UserSearch = () => {
           placeholder="Search users..."
           value={searchQuery}
           onChange={handleInputChange}
-          className="input input-bordered input-sm w-80 pl-10 bg-base-200 border-base-300 focus:border-primary"
+          className="input input-bordered input-sm w-80 pl-10 bg-base-100 border-base-content/20 focus:border-primary focus:outline-none transition-colors duration-200"
         />
       </div>
 
