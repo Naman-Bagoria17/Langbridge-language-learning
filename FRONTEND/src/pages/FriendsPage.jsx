@@ -6,10 +6,8 @@ import { capitialize } from "../lib/utils";
 import { getLanguageFlag } from "../components/FriendCard";
 import NoFriendsFound from "../components/NoFriendsFound";
 import { getUserAvatar } from "../utils/avatar";
-import useAuthUser from "../hooks/useAuthUser";
 
 const FriendsPage = () => {
-  const { authUser } = useAuthUser();
 
   const { data: friends = [], isLoading: loadingFriends } = useQuery({
     queryKey: ["friends"],
@@ -23,7 +21,7 @@ const FriendsPage = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-base-content flex items-center gap-3">
-               Your Friends
+              Your Friends
               <span className="badge badge-primary badge-lg">{friends.length}</span>
             </h1>
             <p className="text-base-content/70 mt-2">Your language learning connections</p>
@@ -44,52 +42,76 @@ const FriendsPage = () => {
             {friends.map((friend) => (
               <div
                 key={friend._id}
-                className="card bg-base-200 border border-base-300 p-6 shadow-lg hover:shadow-xl transition h-full flex flex-col"
+                className="group bg-gradient-to-br from-base-100 to-base-200 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-base-300/50 h-full flex flex-col"
               >
-                <div className="flex items-center gap-4 mb-4">
-                  <img
-                    src={getUserAvatar(friend)}
-                    alt={friend.fullName}
-                    className="w-16 h-16 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 object-cover"
-                  />
-                  <div>
-                    <h4 className="text-lg font-semibold text-base-content">{friend.fullName}</h4>
-                    {friend.location && (
-                      <div className="flex items-center gap-2 text-primary text-sm">
-                        <MapPinIcon className="w-4 h-4" />
-                        {friend.location}
-                      </div>
-                    )}
+                {/* Header with Avatar and Name */}
+                <div className="flex flex-col items-center text-center mb-6">
+                  <div className="relative mb-4">
+                    <img
+                      src={getUserAvatar(friend)}
+                      alt={friend.fullName}
+                      className="w-20 h-20 rounded-full object-cover ring-4 ring-primary/20 group-hover:ring-primary/40 transition-all duration-300"
+                    />
+                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-success rounded-full border-2 border-base-100 flex items-center justify-center">
+                      <div className="w-2 h-2 bg-white rounded-full"></div>
+                    </div>
+                  </div>
+
+                  <h4 className="text-xl font-bold text-base-content mb-1">{friend.fullName}</h4>
+
+                  {friend.location && (
+                    <div className="flex items-center gap-1 text-base-content/60 text-sm">
+                      <MapPinIcon className="w-3 h-3" />
+                      {friend.location}
+                    </div>
+                  )}
+                </div>
+
+                {/* Languages Section */}
+                <div className="mb-6 space-y-3">
+                  <div className="flex items-center gap-3 p-3 bg-base-100/50 rounded-xl border border-base-300/30">
+                    <div className="text-2xl">{getLanguageFlag(friend.nativeLanguage)}</div>
+                    <div className="flex-1">
+                      <p className="text-xs text-base-content/60 uppercase tracking-wide font-medium">Native</p>
+                      <p className="text-sm font-semibold text-base-content">{capitialize(friend.nativeLanguage)}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 bg-base-100/50 rounded-xl border border-base-300/30">
+                    <div className="text-2xl">{getLanguageFlag(friend.learningLanguage)}</div>
+                    <div className="flex-1">
+                      <p className="text-xs text-base-content/60 uppercase tracking-wide font-medium">Learning</p>
+                      <p className="text-sm font-semibold text-base-content">{capitialize(friend.learningLanguage)}</p>
+                    </div>
                   </div>
                 </div>
 
-                {/* Language Chips */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="badge badge-primary gap-1">
-                    {getLanguageFlag(friend.nativeLanguage)} Native: {capitialize(friend.nativeLanguage)}
-                  </span>
-                  <span className="badge badge-secondary gap-1">
-                    {getLanguageFlag(friend.learningLanguage)} Learning: {capitialize(friend.learningLanguage)}
-                  </span>
-                </div>
-
                 {/* Bio */}
-                <div className="flex-1">
-                  {friend.bio && <p className="text-base-content/70 text-sm mb-4">{friend.bio}</p>}
+                <div className="flex-1 mb-6">
+                  {friend.bio ? (
+                    <div className="bg-base-100/30 rounded-xl p-4 border border-base-300/20">
+                      <p className="text-xs text-base-content/60 uppercase tracking-wide font-medium mb-2">About</p>
+                      <p className="text-sm text-base-content/80 leading-relaxed line-clamp-3">{friend.bio}</p>
+                    </div>
+                  ) : (
+                    <div className="bg-base-100/20 rounded-xl p-4 border border-dashed border-base-300/40">
+                      <p className="text-xs text-base-content/40 text-center italic">No bio available</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <Link
                     to={`/chat/${friend._id}`}
-                    className="btn btn-primary flex-1"
+                    className="btn btn-primary flex-1 rounded-xl border-0 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-content shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     <MessageCircleIcon className="w-4 h-4" />
                     Chat
                   </Link>
                   <Link
                     to={`/call/${friend._id}`}
-                    className="btn btn-secondary"
+                    className="btn btn-square rounded-xl bg-gradient-to-r from-secondary to-secondary/80 hover:from-secondary/90 hover:to-secondary border-0 text-secondary-content shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     📞
                   </Link>

@@ -49,6 +49,11 @@ export async function getNativeSpeakers() {
   return response.data;
 }
 
+export async function getLanguageTeachers() {
+  const response = await axiosInstance.get("/users/language-teachers");
+  return response.data;
+}
+
 export async function searchUsers(query) {
   const response = await axiosInstance.get(`/users/search?q=${encodeURIComponent(query)}`);
   return response.data;

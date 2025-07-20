@@ -9,6 +9,7 @@ import {
   sendFriendRequest,
   getCoLearners,
   getNativeSpeakers,
+  getLanguageTeachers,
   searchUsers,
 } from "../controllers/user.controller.js";
 
@@ -21,6 +22,7 @@ router.get("/", getRecommendedUsers);
 router.get("/friends", getMyFriends);
 router.get("/co-learners", getCoLearners);
 router.get("/native-speakers", getNativeSpeakers);
+router.get("/language-teachers", getLanguageTeachers);
 router.get("/search", searchUsers);
 
 router.post("/friend-request/:id", sendFriendRequest);

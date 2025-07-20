@@ -119,7 +119,27 @@ const App = () => {
         />
       </Routes>
 
-      <Toaster />
+      <Toaster
+        toastOptions={{
+          style: {
+            background: 'oklch(var(--b2))',
+            color: 'oklch(var(--bc))',
+            border: '1px solid oklch(var(--b3))',
+          },
+          success: {
+            style: {
+              background: 'oklch(var(--su))',
+              color: 'oklch(var(--suc))',
+            },
+          },
+          error: {
+            style: {
+              background: 'oklch(var(--er))',
+              color: 'oklch(var(--erc))',
+            },
+          },
+        }}
+      />
     </div>
   );
 };

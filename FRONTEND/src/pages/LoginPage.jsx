@@ -150,7 +150,7 @@ const LoginPage = () => {
                 Don’t have an account?{" "}
                 <Link
                   to="/signup"
-                  className="text-primary hover:underline"
+                  className="font-bold text-emerald-400 hover:text-emerald-300 underline underline-offset-4 transition-all duration-200"
                 >
                   Create one
                 </Link>

@@ -202,6 +202,30 @@ export async function getNativeSpeakers(req, res) {
     }
 }
 
+export async function getLanguageTeachers(req, res) {
+    try {
+        const currentUserId = req.user.id;
+        const currentUser = await User.findById(currentUserId).select("friends learningLanguage");
+
+        if (!currentUser.learningLanguage) {
+            return res.status(400).json({ message: "User has not set a learning language" });
+        }
+
+        const languageTeachers = await User.find({
+            $and: [
+                { _id: { $ne: currentUserId } }, // exclude current user
+                { _id: { $nin: currentUser.friends } }, // exclude current user's friends
+                { isOnboarded: true },
+                { nativeLanguage: { $regex: new RegExp(`^${currentUser.learningLanguage}$`, 'i') } }, // native speakers of user's learning language
+            ],
+        }).select("fullName profilePic avatarConfig nativeLanguage learningLanguage email location bio");
+        res.status(200).json(languageTeachers);
+    } catch (error) {
+        console.error("Error in getLanguageTeachers controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
 export async function searchUsers(req, res) {
     try {
         const currentUserId = req.user.id;
