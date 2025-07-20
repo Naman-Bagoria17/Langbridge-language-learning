@@ -161,10 +161,27 @@ export async function getCoLearners(req, res) {
             return res.status(400).json({ message: "User has not set a learning language" });
         }
 
+        // Get users who have pending friend requests from current user (outgoing)
+        const outgoingRequests = await FriendRequest.find({
+            sender: currentUserId,
+            status: "pending"
+        }).select("recipient");
+
+        // Get users who have sent pending friend requests to current user (incoming)
+        const incomingRequests = await FriendRequest.find({
+            recipient: currentUserId,
+            status: "pending"
+        }).select("sender");
+
+        const usersWithOutgoingRequests = outgoingRequests.map(req => req.recipient);
+        const usersWithIncomingRequests = incomingRequests.map(req => req.sender);
+        const allUsersToExclude = [...usersWithOutgoingRequests, ...usersWithIncomingRequests];
+
         const coLearners = await User.find({
             $and: [
                 { _id: { $ne: currentUserId } }, // exclude current user
                 { _id: { $nin: currentUser.friends } }, // exclude current user's friends
+                { _id: { $nin: allUsersToExclude } }, // exclude users with pending requests (both outgoing and incoming)
                 { isOnboarded: true },
                 { learningLanguage: { $regex: new RegExp(`^${currentUser.learningLanguage}$`, 'i') } }, // case-insensitive match
             ],
@@ -186,10 +203,27 @@ export async function getNativeSpeakers(req, res) {
             return res.status(400).json({ message: "User has not set a native language" });
         }
 
+        // Get users who have pending friend requests from current user (outgoing)
+        const outgoingRequests = await FriendRequest.find({
+            sender: currentUserId,
+            status: "pending"
+        }).select("recipient");
+
+        // Get users who have sent pending friend requests to current user (incoming)
+        const incomingRequests = await FriendRequest.find({
+            recipient: currentUserId,
+            status: "pending"
+        }).select("sender");
+
+        const usersWithOutgoingRequests = outgoingRequests.map(req => req.recipient);
+        const usersWithIncomingRequests = incomingRequests.map(req => req.sender);
+        const allUsersToExclude = [...usersWithOutgoingRequests, ...usersWithIncomingRequests];
+
         const nativeSpeakers = await User.find({
             $and: [
                 { _id: { $ne: currentUserId } }, // exclude current user
                 { _id: { $nin: currentUser.friends } }, // exclude current user's friends
+                { _id: { $nin: allUsersToExclude } }, // exclude users with pending requests (both outgoing and incoming)
                 { isOnboarded: true },
                 { nativeLanguage: { $regex: new RegExp(`^${currentUser.nativeLanguage}$`, 'i') } }, // case-insensitive match
             ],
@@ -211,10 +245,27 @@ export async function getLanguageTeachers(req, res) {
             return res.status(400).json({ message: "User has not set a learning language" });
         }
 
+        // Get users who have pending friend requests from current user (outgoing)
+        const outgoingRequests = await FriendRequest.find({
+            sender: currentUserId,
+            status: "pending"
+        }).select("recipient");
+
+        // Get users who have sent pending friend requests to current user (incoming)
+        const incomingRequests = await FriendRequest.find({
+            recipient: currentUserId,
+            status: "pending"
+        }).select("sender");
+
+        const usersWithOutgoingRequests = outgoingRequests.map(req => req.recipient);
+        const usersWithIncomingRequests = incomingRequests.map(req => req.sender);
+        const allUsersToExclude = [...usersWithOutgoingRequests, ...usersWithIncomingRequests];
+
         const languageTeachers = await User.find({
             $and: [
                 { _id: { $ne: currentUserId } }, // exclude current user
                 { _id: { $nin: currentUser.friends } }, // exclude current user's friends
+                { _id: { $nin: allUsersToExclude } }, // exclude users with pending requests (both outgoing and incoming)
                 { isOnboarded: true },
                 { nativeLanguage: { $regex: new RegExp(`^${currentUser.learningLanguage}$`, 'i') } }, // native speakers of user's learning language
             ],
@@ -229,17 +280,16 @@ export async function getLanguageTeachers(req, res) {
 export async function searchUsers(req, res) {
     try {
         const currentUserId = req.user.id;
-        const currentUser = await User.findById(currentUserId).select("friends");
         const { q: query } = req.query;
 
         if (!query || query.trim().length === 0) {
             return res.status(400).json({ message: "Search query is required" });
         }
 
+        // Search all users (including friends) but exclude current user
         const searchResults = await User.find({
             $and: [
                 { _id: { $ne: currentUserId } }, // exclude current user
-                { _id: { $nin: currentUser.friends } }, // exclude current user's friends
                 { isOnboarded: true },
                 {
                     $or: [

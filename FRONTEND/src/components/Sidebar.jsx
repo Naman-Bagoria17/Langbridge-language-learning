@@ -56,10 +56,13 @@ const Sidebar = () => {
           </div>
           <div>
             <p className="text-sm font-semibold text-base-content">{authUser?.fullName}</p>
-            <p className="text-xs text-success flex items-center gap-1">
-              <span className="w-2 h-2 bg-success rounded-full"></span>
-              Online
-            </p>
+            <div className="flex items-center gap-1.5">
+              <div className="relative flex items-center justify-center">
+                <div className="w-2 h-2 bg-success rounded-full"></div>
+                <div className="absolute w-2 h-2 bg-success rounded-full animate-ping opacity-75"></div>
+              </div>
+              <span className="text-xs text-base-content/70 font-medium">Online</span>
+            </div>
           </div>
         </div>
       </div>

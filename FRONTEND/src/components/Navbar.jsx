@@ -13,6 +13,8 @@ import UserSearch from "./UserSearch";
 import LanguageSelector from "./LanguageSelector";
 import { useState, useRef, useEffect } from "react";
 import { capitialize } from "../lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { getFriendRequests } from "../lib/api";
 
 const Navbar = () => {
   const { authUser } = useAuthUser();
@@ -22,6 +24,16 @@ const Navbar = () => {
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  // Query for friend requests to check for unread notifications
+  const { data: friendRequests } = useQuery({
+    queryKey: ["friendRequests"],
+    queryFn: getFriendRequests,
+    refetchInterval: 30000, // Refetch every 30 seconds
+  });
+
+  // Check if there are unread notifications
+  const hasUnreadNotifications = friendRequests?.incomingReqs?.length > 0;
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -57,17 +69,31 @@ const Navbar = () => {
         )}
 
         {/* Center - Search */}
-        <div className="flex-1 flex justify-center max-w-md mx-4">
+        <div className="flex-1 flex justify-center max-w-4xl mx-4">
           <UserSearch />
         </div>
 
         {/* Right Side */}
         <div className="flex items-center gap-4">
           <Link to="/notifications">
-            <button className="btn btn-ghost btn-circle">
+            <button className={`btn btn-ghost btn-circle transition-all duration-300 ${hasUnreadNotifications ? 'hover:bg-primary/10 bg-primary/5' : 'hover:bg-base-300'}`}>
               <div className="indicator">
-                <BellIcon className="w-5 h-5" />
-                <span className="badge badge-xs badge-primary indicator-item"></span>
+                <BellIcon
+                  className={`w-5 h-5 transition-all duration-300 stroke-2 ${hasUnreadNotifications
+                    ? 'bell-ring text-primary'
+                    : 'text-base-content/80 hover:text-base-content'
+                    }`}
+                  style={{
+                    filter: hasUnreadNotifications
+                      ? 'drop-shadow(0 0 6px oklch(var(--p) / 0.4))'
+                      : 'none'
+                  }}
+                />
+                {hasUnreadNotifications && (
+                  <span className="badge badge-xs badge-primary indicator-item animate-pulse shadow-lg font-bold">
+                    {friendRequests?.incomingReqs?.length}
+                  </span>
+                )}
               </div>
             </button>
           </Link>
@@ -94,9 +120,9 @@ const Navbar = () => {
 
             {/* Custom Dropdown Menu */}
             {isDropdownOpen && (
-              <div className="absolute right-0 top-full mt-2 w-80 bg-base-200 rounded-xl shadow-xl border border-base-300 z-50">
+              <div className="absolute right-0 top-full mt-2 w-80 bg-base-100 rounded-xl shadow-2xl border-2 border-base-content/10 z-50">
                 <ul className="menu p-0">
-                  <li className="border-b border-base-300 px-3 py-3">
+                  <li className="border-b border-base-content/10 px-3 py-3">
                     <div className="flex items-start gap-3 min-w-0">
                       <div className="avatar flex-shrink-0">
                         <div className="w-10 h-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-1">
@@ -104,19 +130,21 @@ const Navbar = () => {
                         </div>
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-base-content truncate">{authUser?.fullName}</p>
-                        <p className="text-xs text-base-content/70 break-all">{authUser?.email}</p>
+                        <p className="text-sm font-semibold text-base-content truncate">{authUser?.fullName}</p>
+                        <p className="text-xs text-base-content/60 break-all">{authUser?.email}</p>
                         {authUser?.learningLanguage && (
-                          <p className="text-xs text-primary mt-1">
-                            Learning: {capitialize(authUser.learningLanguage)}
-                          </p>
+                          <div className="flex items-center gap-1 mt-1">
+                            <p className="text-sm font-semibold text-primary dark:text-primary-content capitalize">
+                              Learning: {authUser.learningLanguage}
+                            </p>
+                          </div>
                         )}
                       </div>
                     </div>
                   </li>
 
                   {/* Language Selector */}
-                  <li className="border-b border-base-300">
+                  <li className="border-b border-base-content/10">
                     {showLanguageSelector ? (
                       <div onClick={(e) => e.stopPropagation()}>
                         <LanguageSelector
@@ -130,18 +158,18 @@ const Navbar = () => {
                           e.stopPropagation();
                           setShowLanguageSelector(true);
                         }}
-                        className="flex items-center gap-3 px-3 py-2 hover:bg-base-300 w-full text-left"
+                        className="flex items-center gap-3 px-3 py-2 hover:bg-base-200 w-full text-left transition-colors duration-200"
                       >
                         <GlobeIcon className="w-4 h-4 text-primary" />
-                        <span className="text-sm">Change Learning Language</span>
+                        <span className="text-sm text-base-content">Change Learning Language</span>
                       </button>
                     )}
                   </li>
 
-                  <li className="pt-2 px-1">
+                  <li className="p-2">
                     <button
                       onClick={logoutMutation}
-                      className="btn btn-ghost btn-sm text-error hover:bg-error/10 w-full justify-start"
+                      className="btn btn-ghost btn-sm btn-error w-full justify-start hover:bg-error/10"
                     >
                       <LogOutIcon className="w-4 h-4" />
                       Sign Out

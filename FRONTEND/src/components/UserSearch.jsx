@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { SearchIcon, UserIcon, UserPlusIcon, CheckCircleIcon } from "lucide-react";
-import { searchUsers, sendFriendRequest, getOutgoingFriendReqs } from "../lib/api";
+import { searchUsers, sendFriendRequest, getOutgoingFriendReqs, getUserFriends } from "../lib/api";
 import { getUserAvatar } from "../utils/avatar";
 import { getLanguageFlag } from "./FriendCard";
 import toast from "react-hot-toast";
@@ -25,12 +25,23 @@ const UserSearch = () => {
     queryFn: getOutgoingFriendReqs,
   });
 
+  const { data: friends = [] } = useQuery({
+    queryKey: ["friends"],
+    queryFn: getUserFriends,
+  });
+
   const { mutate: sendFriendRequestMutation, isPending: sendingRequest } = useMutation({
     mutationFn: sendFriendRequest,
-    onSuccess: (data, userId) => {
+    onSuccess: (_, userId) => {
       toast.success("Friend request sent!");
       setOutgoingRequestsIds(prev => new Set([...prev, userId]));
+      // Invalidate outgoing friend requests
       queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] });
+      // Invalidate all user lists to remove the user who just received a request
+      queryClient.invalidateQueries({ queryKey: ["coLearners"] });
+      queryClient.invalidateQueries({ queryKey: ["nativeSpeakers"] });
+      queryClient.invalidateQueries({ queryKey: ["languageTeachers"] });
+      // Note: We don't invalidate searchUsers since we want to show the updated status
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || "Failed to send friend request");
@@ -44,6 +55,9 @@ const UserSearch = () => {
       setOutgoingRequestsIds(requestIds);
     }
   }, [outgoingFriendReqs]);
+
+  // Create a set of friend IDs for quick lookup
+  const friendIds = new Set(friends.map(friend => friend._id));
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -82,7 +96,7 @@ const UserSearch = () => {
           placeholder="Search users..."
           value={searchQuery}
           onChange={handleInputChange}
-          className="input input-bordered input-sm w-80 pl-10 bg-base-100 border-base-content/20 focus:border-primary focus:outline-none transition-colors duration-200"
+          className="input input-bordered input-sm w-96 pl-10 bg-base-100 border-base-content/20 focus:border-primary focus:outline-none transition-colors duration-200"
         />
       </div>
 
@@ -108,6 +122,7 @@ const UserSearch = () => {
             <div className="py-2">
               {searchResults.map((user) => {
                 const alreadyRequested = outgoingRequestsIds.has(user._id);
+                const isFriend = friendIds.has(user._id);
 
                 return (
                   <div
@@ -146,28 +161,30 @@ const UserSearch = () => {
                       </div>
                     </div>
 
-                    {/* Add Friend Button */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleSendFriendRequest(user._id);
-                      }}
-                      disabled={alreadyRequested || sendingRequest}
-                      className={`btn btn-xs ${alreadyRequested ? "btn-success" : "btn-primary"
-                        }`}
-                    >
-                      {alreadyRequested ? (
-                        <>
-                          <CheckCircleIcon className="w-3 h-3" />
-                          Sent
-                        </>
-                      ) : (
-                        <>
-                          <UserPlusIcon className="w-3 h-3" />
-                          Add
-                        </>
-                      )}
-                    </button>
+                    {/* Status Button */}
+                    {isFriend ? (
+                      <div className="btn btn-xs btn-success btn-disabled">
+                        <CheckCircleIcon className="w-3 h-3" />
+                        Friends
+                      </div>
+                    ) : alreadyRequested ? (
+                      <div className="btn btn-xs btn-warning btn-disabled">
+                        <CheckCircleIcon className="w-3 h-3" />
+                        Sent
+                      </div>
+                    ) : (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSendFriendRequest(user._id);
+                        }}
+                        disabled={sendingRequest}
+                        className="btn btn-xs btn-primary"
+                      >
+                        <UserPlusIcon className="w-3 h-3" />
+                        Add
+                      </button>
+                    )}
                   </div>
                 );
               })}

@@ -24,7 +24,6 @@ const FriendsPage = () => {
               Your Friends
               <span className="badge badge-primary badge-lg">{friends.length}</span>
             </h1>
-            <p className="text-base-content/70 mt-2">Your language learning connections</p>
           </div>
         </div>
       </div>

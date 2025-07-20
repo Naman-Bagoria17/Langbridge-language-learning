@@ -136,4 +136,366 @@ body {
   background-color: oklch(var(--b3));
 }
 
+/* Bell ringing animation */
+@keyframes ring {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  10% {
+    transform: rotate(15deg);
+  }
+
+  20% {
+    transform: rotate(-12deg);
+  }
+
+  30% {
+    transform: rotate(10deg);
+  }
+
+  40% {
+    transform: rotate(-8deg);
+  }
+
+  50% {
+    transform: rotate(6deg);
+  }
+
+  60% {
+    transform: rotate(-4deg);
+  }
+
+  70% {
+    transform: rotate(2deg);
+  }
+
+  80% {
+    transform: rotate(-1deg);
+  }
+
+  90% {
+    transform: rotate(1deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes bounce {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-6px);
+  }
+
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
+.bell-ring {
+  animation: ring 1.5s ease-in-out infinite, bounce 1.5s ease-in-out infinite;
+  transform-origin: 50% 4px;
+  filter: drop-shadow(0 0 4px oklch(var(--p) / 0.3));
+}
+
+/* Stream Chat Theme Customization */
+.str-chat {
+  --str-chat__primary-color: oklch(var(--p));
+  --str-chat__active-primary-color: oklch(var(--pf));
+  --str-chat__surface-color: oklch(var(--b1));
+  --str-chat__secondary-surface-color: oklch(var(--b2));
+  --str-chat__primary-surface-color: oklch(var(--b3));
+  --str-chat__disabled-color: oklch(var(--bc) / 0.3);
+  --str-chat__text-color: oklch(var(--bc));
+  --str-chat__text-low-emphasis: oklch(var(--bc) / 0.7);
+  --str-chat__text-medium-emphasis: oklch(var(--bc) / 0.8);
+  --str-chat__text-high-emphasis: oklch(var(--bc));
+  --str-chat__border-radius-circle: 50%;
+  --str-chat__border-radius-sm: 0.375rem;
+  --str-chat__border-radius-md: 0.5rem;
+  --str-chat__border-radius-lg: 0.75rem;
+  --str-chat__border-color: oklch(var(--bc) / 0.1);
+  --str-chat__message-bubble-border-color: oklch(var(--bc) / 0.1);
+  --str-chat__overlay-color: oklch(var(--bc) / 0.1);
+}
+
+/* Stream Chat Component Overrides */
+.str-chat__channel-header {
+  background-color: oklch(var(--b2)) !important;
+  border-bottom: 1px solid oklch(var(--bc) / 0.1) !important;
+  color: oklch(var(--bc)) !important;
+}
+
+.str-chat__channel-header-title {
+  color: oklch(var(--bc)) !important;
+}
+
+.str-chat__channel-header-info {
+  color: oklch(var(--bc) / 0.7) !important;
+}
+
+.str-chat__message-list {
+  background-color: oklch(var(--b1)) !important;
+}
+
+.str-chat__message-input {
+  background-color: oklch(var(--b2)) !important;
+  border-top: 1px solid oklch(var(--bc) / 0.1) !important;
+}
+
+.str-chat__message-input-inner {
+  background-color: oklch(var(--b1)) !important;
+  border: 1px solid oklch(var(--bc) / 0.2) !important;
+  color: oklch(var(--bc)) !important;
+}
+
+.str-chat__message-input-inner:focus-within {
+  border-color: oklch(var(--p)) !important;
+  box-shadow: 0 0 0 2px oklch(var(--p) / 0.2) !important;
+}
+
+.str-chat__message-simple {
+  color: oklch(var(--bc)) !important;
+}
+
+.str-chat__message-simple__text {
+  background-color: oklch(var(--b2)) !important;
+  color: oklch(var(--bc)) !important;
+  border: 1px solid oklch(var(--bc) / 0.1) !important;
+}
+
+.str-chat__message-simple__text--me {
+  background-color: oklch(var(--p)) !important;
+  color: oklch(var(--pc)) !important;
+}
+
+.str-chat__message-simple__text--me .str-chat__message-text {
+  color: oklch(var(--pc)) !important;
+}
+
+.str-chat__message-text {
+  color: oklch(var(--bc)) !important;
+}
+
+.str-chat__message-timestamp {
+  color: oklch(var(--bc) / 0.6) !important;
+}
+
+.str-chat__avatar {
+  border: 2px solid oklch(var(--bc) / 0.1) !important;
+}
+
+.str-chat__message-input-send-button {
+  background-color: oklch(var(--p)) !important;
+  color: oklch(var(--pc)) !important;
+}
+
+.str-chat__message-input-send-button:hover {
+  background-color: oklch(var(--pf)) !important;
+}
+
+.str-chat__thread {
+  background-color: oklch(var(--b1)) !important;
+  border-left: 1px solid oklch(var(--bc) / 0.1) !important;
+}
+
+.str-chat__thread-header {
+  background-color: oklch(var(--b2)) !important;
+  border-bottom: 1px solid oklch(var(--bc) / 0.1) !important;
+  color: oklch(var(--bc)) !important;
+}
+
+/* Additional Stream Chat customizations */
+.str-chat__message-input-flat {
+  background-color: oklch(var(--b1)) !important;
+  border: 1px solid oklch(var(--bc) / 0.2) !important;
+  color: oklch(var(--bc)) !important;
+}
+
+.str-chat__message-input-flat:focus {
+  border-color: oklch(var(--p)) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px oklch(var(--p) / 0.2) !important;
+}
+
+.str-chat__message-input-flat::placeholder {
+  color: oklch(var(--bc) / 0.5) !important;
+}
+
+.str-chat__emoji-picker {
+  background-color: oklch(var(--b1)) !important;
+  border: 1px solid oklch(var(--bc) / 0.1) !important;
+  box-shadow: 0 10px 25px oklch(var(--bc) / 0.1) !important;
+}
+
+.str-chat__message-attachment {
+  background-color: oklch(var(--b2)) !important;
+  border: 1px solid oklch(var(--bc) / 0.1) !important;
+}
+
+.str-chat__message-reactions {
+  background-color: oklch(var(--b1)) !important;
+  border: 1px solid oklch(var(--bc) / 0.1) !important;
+}
+
+.str-chat__message-reaction {
+  background-color: oklch(var(--b2)) !important;
+  color: oklch(var(--bc)) !important;
+}
+
+.str-chat__message-reaction--selected {
+  background-color: oklch(var(--p)) !important;
+  color: oklch(var(--pc)) !important;
+}
+
+.str-chat__date-separator {
+  color: oklch(var(--bc) / 0.6) !important;
+}
+
+.str-chat__date-separator-line {
+  background-color: oklch(var(--bc) / 0.2) !important;
+}
+
+/* Stream Chat Link Styling */
+.str-chat__message-text a,
+.str-chat__message-simple__text a {
+  color: oklch(var(--p)) !important;
+  text-decoration: underline !important;
+  text-decoration-color: oklch(var(--p) / 0.5) !important;
+  text-underline-offset: 2px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+.str-chat__message-text a:hover,
+.str-chat__message-simple__text a:hover {
+  color: oklch(var(--pf)) !important;
+  text-decoration-color: oklch(var(--pf)) !important;
+  background-color: oklch(var(--p) / 0.1) !important;
+  padding: 2px 4px !important;
+  border-radius: 4px !important;
+}
+
+/* Special styling for video call links */
+.str-chat__message-text a[href*="/call/"],
+.str-chat__message-simple__text a[href*="/call/"] {
+  background: linear-gradient(135deg, oklch(var(--p)) 0%, oklch(var(--s)) 100%) !important;
+  color: oklch(var(--pc)) !important;
+  padding: 6px 12px !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  font-weight: 700 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  box-shadow: 0 2px 8px oklch(var(--p) / 0.3) !important;
+  border: 2px solid oklch(var(--p) / 0.2) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.str-chat__message-text a[href*="/call/"]:hover,
+.str-chat__message-simple__text a[href*="/call/"]:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px oklch(var(--p) / 0.4) !important;
+  background: linear-gradient(135deg, oklch(var(--pf)) 0%, oklch(var(--sf)) 100%) !important;
+}
+
+.str-chat__message-text a[href*="/call/"]:before,
+.str-chat__message-simple__text a[href*="/call/"]:before {
+  content: "🎥" !important;
+  margin-right: 4px !important;
+}
+
+.str-chat__message-text a[href*="/call/"]:after,
+.str-chat__message-simple__text a[href*="/call/"]:after {
+  content: "▶" !important;
+  margin-left: 4px !important;
+  font-size: 0.8em !important;
+  opacity: 0.8 !important;
+}
+
+/* Enhanced visibility for all links in messages */
+.str-chat__message-simple__text--me a {
+  color: oklch(var(--pc)) !important;
+  background-color: oklch(var(--pc) / 0.2) !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  text-decoration: underline !important;
+  text-decoration-color: oklch(var(--pc) / 0.7) !important;
+}
+
+.str-chat__message-simple__text--me a:hover {
+  background-color: oklch(var(--pc) / 0.3) !important;
+  text-decoration-color: oklch(var(--pc)) !important;
+}
+
+/* Video call links in user's own messages */
+.str-chat__message-simple__text--me a[href*="/call/"] {
+  background: oklch(var(--pc)) !important;
+  color: oklch(var(--p)) !important;
+  border: 2px solid oklch(var(--pc) / 0.3) !important;
+}
+
+.str-chat__message-simple__text--me a[href*="/call/"]:hover {
+  background: oklch(var(--pc)) !important;
+  color: oklch(var(--pf)) !important;
+  box-shadow: 0 4px 12px oklch(var(--pc) / 0.4) !important;
+}
+
+/* Message text formatting for better readability */
+.str-chat__message-text {
+  line-height: 1.5 !important;
+  word-wrap: break-word !important;
+  white-space: pre-wrap !important;
+}
+
+.str-chat__message-simple__text {
+  line-height: 1.5 !important;
+  word-wrap: break-word !important;
+  white-space: pre-wrap !important;
+}
+
+/* Emoji styling in messages */
+.str-chat__message-text img.emoji,
+.str-chat__message-simple__text img.emoji {
+  width: 1.2em !important;
+  height: 1.2em !important;
+  vertical-align: middle !important;
+  margin: 0 2px !important;
+}
+
+/* Code blocks and inline code */
+.str-chat__message-text code,
+.str-chat__message-simple__text code {
+  background-color: oklch(var(--b3)) !important;
+  color: oklch(var(--bc)) !important;
+  padding: 2px 4px !important;
+  border-radius: 4px !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 0.9em !important;
+}
+
+.str-chat__message-text pre,
+.str-chat__message-simple__text pre {
+  background-color: oklch(var(--b3)) !important;
+  color: oklch(var(--bc)) !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  border-left: 4px solid oklch(var(--p)) !important;
+  overflow-x: auto !important;
+  font-family: 'Courier New', monospace !important;
+  margin: 4px 0 !important;
+}
+
 /* Let DaisyUI handle all styling */

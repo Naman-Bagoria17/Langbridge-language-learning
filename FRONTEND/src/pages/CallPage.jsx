@@ -37,8 +37,15 @@ const CallPage = () => {
   });
 
   useEffect(() => {
+    let videoClient = null;
+    let callInstance = null;
+    let isMounted = true;
+
     const initCall = async () => {
-      if (!tokenData.token || !authUser || !callId) return;
+      if (!tokenData?.token || !authUser || !callId) {
+        setIsConnecting(false);
+        return;
+      }
 
       try {
         const user = {
@@ -47,26 +54,56 @@ const CallPage = () => {
           image: getUserAvatar(authUser),
         };
 
-        const videoClient = new StreamVideoClient({
+        videoClient = new StreamVideoClient({
           apiKey: STREAM_API_KEY,
           user,
           token: tokenData.token,
         });
 
-        const callInstance = videoClient.call("default", callId);
+        callInstance = videoClient.call("default", callId);
         await callInstance.join({ create: true });
+
+        if (!isMounted) return; // Component unmounted during async operation
 
         setClient(videoClient);
         setCall(callInstance);
       } catch (error) {
-        toast.error("Could not join the call.");
+        console.error("Error initializing call:", error);
+        if (isMounted) {
+          toast.error("Could not join the call.");
+        }
       } finally {
-        setIsConnecting(false);
+        if (isMounted) {
+          setIsConnecting(false);
+        }
       }
     };
 
     initCall();
-  }, [tokenData, authUser, callId]);
+
+    // Cleanup function
+    return () => {
+      isMounted = false;
+      if (callInstance) {
+        callInstance.leave().catch(console.error);
+      }
+      if (videoClient) {
+        videoClient.disconnectUser().catch(console.error);
+      }
+    };
+  }, [tokenData?.token, authUser?._id, callId]);
+
+  // Additional cleanup on component unmount
+  useEffect(() => {
+    return () => {
+      if (call) {
+        call.leave().catch(console.error);
+      }
+      if (client) {
+        client.disconnectUser().catch(console.error);
+      }
+    };
+  }, [client, call]);
 
   if (isLoading || isConnecting) return <PageLoader />;
 
@@ -92,9 +129,47 @@ const CallContent = () => {
   const callingState = useCallCallingState();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (callingState === CallingState.LEFT) {
+      // Check for return path in URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const returnTo = urlParams.get('returnTo');
+
+      setTimeout(() => {
+        if (returnTo) {
+          // Navigate back to the specified path (e.g., chat page)
+          navigate(decodeURIComponent(returnTo));
+        } else {
+          // Default to home page
+          navigate("/");
+        }
+      }, 1500); // Delay to ensure call cleanup
+    }
+  }, [callingState, navigate]);
+
   if (callingState === CallingState.LEFT) {
-    navigate("/");
-    return null;
+    const urlParams = new URLSearchParams(window.location.search);
+    const returnTo = urlParams.get('returnTo');
+
+    return (
+      <div className="flex items-center justify-center h-full bg-base-100">
+        <div className="text-center max-w-md mx-auto p-6">
+          <div className="loading loading-spinner loading-lg text-primary mb-4"></div>
+          <h3 className="text-lg font-semibold text-base-content mb-2">Call Ended</h3>
+          <div className="space-y-2">
+            <p className="text-base-content/70">
+              {returnTo && returnTo.includes('/chat/')
+                ? "Returning to chat..."
+                : "Returning to home page..."
+              }
+            </p>
+            <p className="text-xs text-base-content/50">
+              Thank you for using our video call feature! 🎥
+            </p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

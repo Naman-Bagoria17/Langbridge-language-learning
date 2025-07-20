@@ -26,6 +26,10 @@ const NotificationsPage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["friendRequests"] });
       queryClient.invalidateQueries({ queryKey: ["friends"] });
+      // Invalidate user discovery lists since accepting a request removes them from discovery
+      queryClient.invalidateQueries({ queryKey: ["coLearners"] });
+      queryClient.invalidateQueries({ queryKey: ["nativeSpeakers"] });
+      queryClient.invalidateQueries({ queryKey: ["languageTeachers"] });
     },
   });
 
@@ -53,10 +57,10 @@ const NotificationsPage = () => {
               {/* Friend Requests */}
               {incoming.length > 0 && (
                 <section className="space-y-6">
-                  <h2 className="flex items-center gap-2 text-xl font-semibold text-emerald-300">
+                  <h2 className="flex items-center gap-2 text-xl font-semibold text-primary">
                     <UserCheckIcon className="w-5 h-5" />
                     Friend Requests
-                    <span className="ml-1 bg-emerald-600/20 text-emerald-200 px-2 py-0.5 rounded-full text-xs">
+                    <span className="ml-1 bg-primary/20 text-primary px-2 py-0.5 rounded-full text-xs">
                       {incoming.length}
                     </span>
                   </h2>
@@ -126,7 +130,7 @@ const NotificationsPage = () => {
                         </p>
                       </div>
 
-                      <span className="flex items-center gap-1 bg-emerald-600/20 text-emerald-200 px-2 py-1 rounded-full text-xs">
+                      <span className="flex items-center gap-1 bg-success/20 text-success px-2 py-1 rounded-full text-xs">
                         <MessageSquareIcon className="w-3 h-3" />
                         New Friend
                       </span>

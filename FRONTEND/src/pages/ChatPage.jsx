@@ -36,19 +36,36 @@ const ChatPage = () => {
   });
 
   useEffect(() => {
+    let client = null;
+    let isMounted = true;
+
     const initChat = async () => {
-      if (!tokenData?.token || !authUser) return;
+      if (!tokenData?.token || !authUser || !targetUserId) {
+        setLoading(false);
+        return;
+      }
 
       try {
-        const client = StreamChat.getInstance(STREAM_API_KEY);
-        await client.connectUser(
-          {
-            id: authUser._id,
-            name: authUser.fullName,
-            image: getUserAvatar(authUser),
-          },
-          tokenData.token
-        );
+        client = StreamChat.getInstance(STREAM_API_KEY);
+
+        // Check if user is already connected
+        if (client.userID && client.userID !== authUser._id) {
+          await client.disconnectUser();
+        }
+
+        // Only connect if not already connected as this user
+        if (!client.userID || client.userID !== authUser._id) {
+          await client.connectUser(
+            {
+              id: authUser._id,
+              name: authUser.fullName,
+              image: getUserAvatar(authUser),
+            },
+            tokenData.token
+          );
+        }
+
+        if (!isMounted) return; // Component unmounted during async operation
 
         const channelId = [authUser._id, targetUserId].sort().join("-");
         const currChannel = client.channel("messaging", channelId, {
@@ -56,24 +73,51 @@ const ChatPage = () => {
         });
 
         await currChannel.watch();
+
+        if (!isMounted) return; // Component unmounted during async operation
+
         setChatClient(client);
         setChannel(currChannel);
       } catch (error) {
         console.error("Error initializing chat:", error);
-        toast.error("Could not connect to chat.");
+        if (isMounted) {
+          toast.error("Could not connect to chat.");
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     initChat();
-  }, [tokenData, authUser, targetUserId]);
+
+    // Cleanup function
+    return () => {
+      isMounted = false;
+      if (client && client.userID) {
+        client.disconnectUser().catch(console.error);
+      }
+    };
+  }, [tokenData?.token, authUser?._id, targetUserId]);
+
+  // Additional cleanup on component unmount
+  useEffect(() => {
+    return () => {
+      if (chatClient && chatClient.userID) {
+        chatClient.disconnectUser().catch(console.error);
+      }
+    };
+  }, [chatClient]);
+
+
 
   const handleVideoCall = () => {
     if (channel) {
-      const callUrl = `${window.location.origin}/call/${channel.id}`;
+      const currentChatPath = `/chat/${targetUserId}`;
+      const callUrl = `${window.location.origin}/call/${channel.id}?returnTo=${encodeURIComponent(currentChatPath)}`;
       channel.sendMessage({
-        text: `I've started a video call. Join me here: ${callUrl}`,
+        text: `🎥 Video Call Started!\n\nClick the link below to join:\n${callUrl}\n\n💡 Make sure your camera and microphone are ready!`,
       });
       toast.success("Video call link sent!");
     }
@@ -82,11 +126,11 @@ const ChatPage = () => {
   if (loading || !chatClient || !channel) return <ChatLoader />;
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full bg-base-100">
       <div className="h-[calc(100vh-4rem)]">
         <Chat client={chatClient}>
           <Channel channel={channel}>
-            <div className="w-full h-full relative rounded-xl overflow-hidden">
+            <div className="w-full h-full relative rounded-xl overflow-hidden bg-base-100 border border-base-content/10 shadow-lg">
               <CallButton handleVideoCall={handleVideoCall} />
               <Window>
                 <ChannelHeader />

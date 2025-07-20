@@ -6,6 +6,7 @@ import {
   getCoLearners,
   getNativeSpeakers,
   getLanguageTeachers,
+  getFriendRequests,
 } from "../lib/api";
 import { CheckCircleIcon, MapPinIcon, UserPlusIcon } from "lucide-react";
 import { capitialize } from "../lib/utils";
@@ -36,6 +37,13 @@ const HomePage = () => {
     enabled: !!authUser?.learningLanguage, // Only fetch if user has a learning language
   });
 
+  // Query for friend requests to detect when new requests are received
+  const { data: friendRequests } = useQuery({
+    queryKey: ["friendRequests"],
+    queryFn: getFriendRequests,
+    refetchInterval: 30000, // Refetch every 30 seconds to catch new incoming requests
+  });
+
   const { data: outgoingFriendReqs } = useQuery({
     queryKey: ["outgoingFriendReqs"],
     queryFn: getOutgoingFriendReqs,
@@ -43,7 +51,14 @@ const HomePage = () => {
 
   const { mutate: sendRequestMutation, isPending } = useMutation({
     mutationFn: sendFriendRequest,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] }),
+    onSuccess: () => {
+      // Invalidate outgoing friend requests
+      queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] });
+      // Invalidate all user lists to remove the user who just received a request
+      queryClient.invalidateQueries({ queryKey: ["coLearners"] });
+      queryClient.invalidateQueries({ queryKey: ["nativeSpeakers"] });
+      queryClient.invalidateQueries({ queryKey: ["languageTeachers"] });
+    },
   });
 
   useEffect(() => {
@@ -73,6 +88,15 @@ const HomePage = () => {
     }
   }, [authUser?.learningLanguage, refetchLanguageTeachers]);
 
+  // Refresh user lists when incoming friend requests change
+  useEffect(() => {
+    if (friendRequests?.incomingReqs) {
+      refetchCoLearners();
+      refetchNativeSpeakers();
+      refetchLanguageTeachers();
+    }
+  }, [friendRequests?.incomingReqs?.length, refetchCoLearners, refetchNativeSpeakers, refetchLanguageTeachers]);
+
   const handleSendFriendRequest = (userId) => {
     sendRequestMutation(userId);
   };
@@ -80,7 +104,7 @@ const HomePage = () => {
   return (
     <div className="w-full h-screen flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b border-base-300">
+      <div className="p-6 border-b-2 border-base-content/10">
         <h1 className="text-3xl font-bold text-base-content">Discover Language Partners</h1>
         <p className="text-base-content/70 mt-2">Connect with co-learners and native speakers</p>
       </div>
@@ -89,8 +113,8 @@ const HomePage = () => {
       <div className="flex-1 flex gap-4 p-6 min-h-0">
 
         {/* CO-LEARNERS CONTAINER */}
-        <div className="flex-1 bg-base-100 rounded-lg border border-base-300 flex flex-col">
-          <div className="p-4 border-b border-base-300">
+        <div className="flex-1 bg-base-100 rounded-lg border-2 border-base-content/10 shadow-lg flex flex-col">
+          <div className="p-4 border-b border-base-content/10">
             <h2 className="text-xl font-bold text-base-content flex items-center gap-2">
               Co-Learners
               <span className="badge badge-primary badge-sm">{coLearners.length}</span>
@@ -115,7 +139,7 @@ const HomePage = () => {
                   return (
                     <div
                       key={user._id}
-                      className="group bg-gradient-to-br from-base-100 to-base-200 rounded-lg p-3 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 border border-base-300/50"
+                      className="group bg-base-100 hover:bg-base-200 rounded-lg p-3 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 border border-base-content/10 hover:border-base-content/20"
                     >
                       {/* Header with Avatar and Name */}
                       <div className="flex items-start gap-3 mb-3">
@@ -123,10 +147,10 @@ const HomePage = () => {
                           <img
                             src={getUserAvatar(user)}
                             alt={user.fullName}
-                            className="w-12 h-12 rounded-full object-cover ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all duration-300"
+                            className="w-12 h-12 rounded-full object-cover ring-2 ring-primary/30 group-hover:ring-primary/50 transition-all duration-300"
                           />
-                          <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-success rounded-full border border-base-100 flex items-center justify-center">
-                            <div className="w-1 h-1 bg-white rounded-full"></div>
+                          <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-success rounded-full border-2 border-base-100 flex items-center justify-center">
+                            <div className="w-1 h-1 bg-success-content rounded-full"></div>
                           </div>
                         </div>
 
@@ -143,10 +167,10 @@ const HomePage = () => {
 
                         <button
                           disabled={alreadyRequested || isPending}
-                          onClick={() => sendRequestMutation(user._id)}
-                          className={`btn btn-xs rounded-md border-0 shadow-sm hover:shadow-md transition-all duration-300 flex-shrink-0 ${alreadyRequested
-                            ? "btn-success bg-gradient-to-r from-success to-success/80"
-                            : "btn-primary bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary"
+                          onClick={() => handleSendFriendRequest(user._id)}
+                          className={`btn btn-xs rounded-md shadow-sm hover:shadow-md transition-all duration-300 flex-shrink-0 ${alreadyRequested
+                            ? "btn-success"
+                            : "btn-primary"
                             }`}
                         >
                           {alreadyRequested ? (
@@ -165,7 +189,7 @@ const HomePage = () => {
 
                       {/* Languages and Bio Section */}
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 p-1.5 bg-base-100/50 rounded-md border border-base-300/30">
+                        <div className="flex items-center gap-2 p-1.5 bg-base-200 rounded-md border border-base-content/10">
                           <div className="text-sm">{getLanguageFlag(user.nativeLanguage)}</div>
                           <div>
                             <p className="text-xs text-base-content/60 uppercase tracking-wide font-medium">Native</p>
@@ -173,17 +197,17 @@ const HomePage = () => {
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2 p-1.5 bg-base-100/50 rounded-md border border-base-300/30">
+                        <div className="flex items-center gap-2 p-1.5 bg-primary/10 rounded-md border border-primary/30">
                           <div className="text-sm">{getLanguageFlag(user.learningLanguage)}</div>
                           <div>
-                            <p className="text-xs text-base-content/60 uppercase tracking-wide font-medium">Learning</p>
-                            <p className="text-xs font-semibold text-base-content">{capitialize(user.learningLanguage)}</p>
+                            <p className="text-xs text-primary/70 uppercase tracking-wide font-medium">Learning</p>
+                            <p className="text-xs font-semibold text-primary">{capitialize(user.learningLanguage)}</p>
                           </div>
                         </div>
 
                         {user.bio && (
-                          <div className="flex-1 bg-base-100/30 rounded-md p-2 border border-base-300/20">
-                            <p className="text-xs text-base-content/80 leading-relaxed line-clamp-1">{user.bio}</p>
+                          <div className="flex-1 bg-base-200/50 rounded-md p-2 border border-base-content/10">
+                            <p className="text-xs text-base-content/70 leading-relaxed line-clamp-1 italic">"{user.bio}"</p>
                           </div>
                         )}
                       </div>
@@ -196,16 +220,16 @@ const HomePage = () => {
         </div>
 
         {/* NATIVE SPEAKERS CONTAINER */}
-        <div className="flex-1 bg-base-100 rounded-lg border border-base-300 flex flex-col">
-          <div className="p-4 border-b border-base-300">
+        <div className="flex-1 bg-base-100 rounded-lg border-2 border-base-content/10 shadow-lg flex flex-col">
+          <div className="p-4 border-b border-base-content/10">
             <h2 className="text-xl font-bold text-base-content flex items-center gap-2">
               Native Speakers
-              <span className="badge badge-secondary badge-sm">{nativeSpeakers.length}</span>
+              <span className="badge badge-primary badge-sm">{nativeSpeakers.length}</span>
             </h2>
             <p className="text-base-content/70 text-sm mt-1">People who share your native language</p>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-secondary/20 scrollbar-track-transparent">
+          <div className="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
             {loadingNativeSpeakers ? (
               <div className="flex justify-center py-12">
                 <span className="loading loading-spinner loading-lg text-secondary"></span>
@@ -222,7 +246,7 @@ const HomePage = () => {
                   return (
                     <div
                       key={user._id}
-                      className="group bg-gradient-to-br from-base-100 to-base-200 rounded-lg p-3 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 border border-base-300/50"
+                      className="group bg-base-100 hover:bg-base-200 rounded-lg p-3 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 border border-base-content/10 hover:border-base-content/20"
                     >
                       {/* Header with Avatar and Name */}
                       <div className="flex items-start gap-3 mb-3">
@@ -230,10 +254,10 @@ const HomePage = () => {
                           <img
                             src={getUserAvatar(user)}
                             alt={user.fullName}
-                            className="w-12 h-12 rounded-full object-cover ring-2 ring-secondary/20 group-hover:ring-secondary/40 transition-all duration-300"
+                            className="w-12 h-12 rounded-full object-cover ring-2 ring-secondary/30 group-hover:ring-secondary/50 transition-all duration-300"
                           />
-                          <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-success rounded-full border border-base-100 flex items-center justify-center">
-                            <div className="w-1 h-1 bg-white rounded-full"></div>
+                          <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-success rounded-full border-2 border-base-100 flex items-center justify-center">
+                            <div className="w-1 h-1 bg-success-content rounded-full"></div>
                           </div>
                         </div>
 
@@ -251,9 +275,9 @@ const HomePage = () => {
                         <button
                           onClick={() => handleSendFriendRequest(user._id)}
                           disabled={alreadyRequested || isPending}
-                          className={`btn btn-xs rounded-md border-0 shadow-sm hover:shadow-md transition-all duration-300 flex-shrink-0 ${alreadyRequested
-                            ? "btn-success bg-gradient-to-r from-success to-success/80"
-                            : "btn-secondary bg-gradient-to-r from-secondary to-secondary/80 hover:from-secondary/90 hover:to-secondary"
+                          className={`btn btn-xs rounded-md shadow-sm hover:shadow-md transition-all duration-300 flex-shrink-0 ${alreadyRequested
+                            ? "btn-success"
+                            : "btn-secondary"
                             }`}
                         >
                           {alreadyRequested ? (
@@ -272,15 +296,15 @@ const HomePage = () => {
 
                       {/* Languages and Bio Section */}
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 p-1.5 bg-secondary/10 rounded-md border border-base-300/30">
+                        <div className="flex items-center gap-2 p-1.5 bg-secondary/10 rounded-md border border-secondary/30">
                           <div className="text-sm">{getLanguageFlag(user.nativeLanguage)}</div>
                           <div>
-                            <p className="text-xs text-base-content/60 uppercase tracking-wide font-medium">Native</p>
+                            <p className="text-xs text-secondary/70 uppercase tracking-wide font-medium">Native</p>
                             <p className="text-xs font-semibold text-secondary">{capitialize(user.nativeLanguage)}</p>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2 p-1.5 bg-base-100/50 rounded-md border border-base-300/30">
+                        <div className="flex items-center gap-2 p-1.5 bg-base-200 rounded-md border border-base-content/10">
                           <div className="text-sm">{getLanguageFlag(user.learningLanguage)}</div>
                           <div>
                             <p className="text-xs text-base-content/60 uppercase tracking-wide font-medium">Learning</p>
@@ -289,8 +313,8 @@ const HomePage = () => {
                         </div>
 
                         {user.bio && (
-                          <div className="flex-1 bg-base-100/30 rounded-md p-2 border border-base-300/20">
-                            <p className="text-xs text-base-content/80 leading-relaxed line-clamp-1">{user.bio}</p>
+                          <div className="flex-1 bg-base-200/50 rounded-md p-2 border border-base-content/10">
+                            <p className="text-xs text-base-content/70 leading-relaxed line-clamp-1 italic">"{user.bio}"</p>
                           </div>
                         )}
                       </div>
@@ -303,16 +327,16 @@ const HomePage = () => {
         </div>
 
         {/* LANGUAGE TEACHERS CONTAINER */}
-        <div className="flex-1 bg-base-100 rounded-lg border border-base-300 flex flex-col">
-          <div className="p-4 border-b border-base-300">
+        <div className="flex-1 bg-base-100 rounded-lg border-2 border-base-content/10 shadow-lg flex flex-col">
+          <div className="p-4 border-b border-base-content/10">
             <h2 className="text-xl font-bold text-base-content flex items-center gap-2">
               Language Teachers
-              <span className="badge badge-accent badge-sm">{languageTeachers.length}</span>
+              <span className="badge badge-primary badge-sm">{languageTeachers.length}</span>
             </h2>
             <p className="text-base-content/70 text-sm mt-1">Native speakers of your learning language</p>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-accent/20 scrollbar-track-transparent">
+          <div className="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
             {loadingLanguageTeachers ? (
               <div className="flex justify-center py-12">
                 <span className="loading loading-spinner loading-lg text-accent"></span>
@@ -329,7 +353,7 @@ const HomePage = () => {
                   return (
                     <div
                       key={user._id}
-                      className="group bg-gradient-to-br from-base-100 to-base-200 rounded-lg p-3 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 border border-base-300/50"
+                      className="group bg-base-100 hover:bg-base-200 rounded-lg p-3 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 border border-base-content/10 hover:border-base-content/20"
                     >
                       {/* Header with Avatar and Name */}
                       <div className="flex items-start gap-3 mb-3">
@@ -337,10 +361,10 @@ const HomePage = () => {
                           <img
                             src={getUserAvatar(user)}
                             alt={user.fullName}
-                            className="w-12 h-12 rounded-full object-cover ring-2 ring-accent/20 group-hover:ring-accent/40 transition-all duration-300"
+                            className="w-12 h-12 rounded-full object-cover ring-2 ring-accent/30 group-hover:ring-accent/50 transition-all duration-300"
                           />
-                          <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-success rounded-full border border-base-100 flex items-center justify-center">
-                            <div className="w-1 h-1 bg-white rounded-full"></div>
+                          <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-success rounded-full border-2 border-base-100 flex items-center justify-center">
+                            <div className="w-1 h-1 bg-success-content rounded-full"></div>
                           </div>
                         </div>
 
@@ -358,9 +382,9 @@ const HomePage = () => {
                         <button
                           onClick={() => handleSendFriendRequest(user._id)}
                           disabled={alreadyRequested || isPending}
-                          className={`btn btn-xs rounded-md border-0 shadow-sm hover:shadow-md transition-all duration-300 flex-shrink-0 ${alreadyRequested
-                            ? "btn-success bg-gradient-to-r from-success to-success/80"
-                            : "btn-accent bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent"
+                          className={`btn btn-xs rounded-md shadow-sm hover:shadow-md transition-all duration-300 flex-shrink-0 ${alreadyRequested
+                            ? "btn-success"
+                            : "btn-accent"
                             }`}
                         >
                           {alreadyRequested ? (
@@ -379,15 +403,15 @@ const HomePage = () => {
 
                       {/* Languages and Bio Section */}
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 p-1.5 bg-accent/10 rounded-md border border-base-300/30">
+                        <div className="flex items-center gap-2 p-1.5 bg-accent/10 rounded-md border border-accent/30">
                           <div className="text-sm">{getLanguageFlag(user.nativeLanguage)}</div>
                           <div>
-                            <p className="text-xs text-base-content/60 uppercase tracking-wide font-medium">Native</p>
+                            <p className="text-xs text-accent/70 uppercase tracking-wide font-medium">Native</p>
                             <p className="text-xs font-semibold text-accent">{capitialize(user.nativeLanguage)}</p>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2 p-1.5 bg-base-100/50 rounded-md border border-base-300/30">
+                        <div className="flex items-center gap-2 p-1.5 bg-base-200 rounded-md border border-base-content/10">
                           <div className="text-sm">{getLanguageFlag(user.learningLanguage)}</div>
                           <div>
                             <p className="text-xs text-base-content/60 uppercase tracking-wide font-medium">Learning</p>
@@ -396,8 +420,8 @@ const HomePage = () => {
                         </div>
 
                         {user.bio && (
-                          <div className="flex-1 bg-base-100/30 rounded-md p-2 border border-base-300/20">
-                            <p className="text-xs text-base-content/80 leading-relaxed line-clamp-1">{user.bio}</p>
+                          <div className="flex-1 bg-base-200/50 rounded-md p-2 border border-base-content/10">
+                            <p className="text-xs text-base-content/70 leading-relaxed line-clamp-1 italic">"{user.bio}"</p>
                           </div>
                         )}
                       </div>
