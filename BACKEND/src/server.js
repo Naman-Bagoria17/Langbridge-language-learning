@@ -17,7 +17,9 @@ const __dirname = path.resolve();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.NODE_ENV === "production"
+      ? true // Allow all origins in production since frontend and backend are on same domain
+      : ["http://localhost:5173", "http://localhost:3000", "http://localhost:5002"],
     credentials: true, // allow frontend to send cookies
   })
 );
