@@ -99,22 +99,14 @@ const FriendsPage = () => {
                   )}
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex gap-3">
-                  <Link
-                    to={`/chat/${friend._id}`}
-                    className="btn btn-primary flex-1 rounded-xl border-0 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-content shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <MessageCircleIcon className="w-4 h-4" />
-                    Chat
-                  </Link>
-                  <Link
-                    to={`/call/${friend._id}`}
-                    className="btn btn-square rounded-xl bg-gradient-to-r from-secondary to-secondary/80 hover:from-secondary/90 hover:to-secondary border-0 text-secondary-content shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    📞
-                  </Link>
-                </div>
+                {/* Action Button */}
+                <Link
+                  to={`/chat/${friend._id}`}
+                  className="btn btn-primary w-full rounded-xl border-0 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-content shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <MessageCircleIcon className="w-4 h-4" />
+                  Start Chat
+                </Link>
               </div>
             ))}
           </div>
