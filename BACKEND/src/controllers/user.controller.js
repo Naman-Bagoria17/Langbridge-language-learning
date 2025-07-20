@@ -151,3 +151,84 @@ export async function getOutgoingFriendReqs(req, res) {
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
+
+export async function getCoLearners(req, res) {
+    try {
+        const currentUserId = req.user.id;
+        const currentUser = await User.findById(currentUserId).select("friends learningLanguage");
+
+        if (!currentUser.learningLanguage) {
+            return res.status(400).json({ message: "User has not set a learning language" });
+        }
+
+        const coLearners = await User.find({
+            $and: [
+                { _id: { $ne: currentUserId } }, // exclude current user
+                { _id: { $nin: currentUser.friends } }, // exclude current user's friends
+                { isOnboarded: true },
+                { learningLanguage: { $regex: new RegExp(`^${currentUser.learningLanguage}$`, 'i') } }, // case-insensitive match
+            ],
+        }).select("fullName profilePic avatarConfig nativeLanguage learningLanguage email location bio");
+
+        res.status(200).json(coLearners);
+    } catch (error) {
+        console.error("Error in getCoLearners controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export async function getNativeSpeakers(req, res) {
+    try {
+        const currentUserId = req.user.id;
+        const currentUser = await User.findById(currentUserId).select("friends nativeLanguage");
+
+        if (!currentUser.nativeLanguage) {
+            return res.status(400).json({ message: "User has not set a native language" });
+        }
+
+        const nativeSpeakers = await User.find({
+            $and: [
+                { _id: { $ne: currentUserId } }, // exclude current user
+                { _id: { $nin: currentUser.friends } }, // exclude current user's friends
+                { isOnboarded: true },
+                { nativeLanguage: { $regex: new RegExp(`^${currentUser.nativeLanguage}$`, 'i') } }, // case-insensitive match
+            ],
+        }).select("fullName profilePic avatarConfig nativeLanguage learningLanguage email location bio");
+
+        res.status(200).json(nativeSpeakers);
+    } catch (error) {
+        console.error("Error in getNativeSpeakers controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export async function searchUsers(req, res) {
+    try {
+        const currentUserId = req.user.id;
+        const currentUser = await User.findById(currentUserId).select("friends");
+        const { q: query } = req.query;
+
+        if (!query || query.trim().length === 0) {
+            return res.status(400).json({ message: "Search query is required" });
+        }
+
+        const searchResults = await User.find({
+            $and: [
+                { _id: { $ne: currentUserId } }, // exclude current user
+                { _id: { $nin: currentUser.friends } }, // exclude current user's friends
+                { isOnboarded: true },
+                {
+                    $or: [
+                        { fullName: { $regex: query, $options: 'i' } }, // case-insensitive search
+                        { email: { $regex: query, $options: 'i' } },
+                    ]
+                }
+            ],
+        }).select("fullName profilePic avatarConfig nativeLanguage learningLanguage email location bio");
+
+        res.status(200).json(searchResults);
+    } catch (error) {
+        console.error("Error in searchUsers controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}

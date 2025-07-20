@@ -145,3 +145,38 @@ export async function onboard(req, res) {
     res.status(500).json({ message: "Internal Server Error" });
   }
 }
+
+export async function updateLearningLanguage(req, res) {
+  try {
+    const userId = req.user._id;
+    const { learningLanguage } = req.body;
+
+    if (!learningLanguage) {
+      return res.status(400).json({ message: "Learning language is required" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { learningLanguage },
+      { new: true }
+    );
+
+    if (!updatedUser) return res.status(404).json({ message: "User not found" });
+
+    try {
+      await upsertStreamUser({
+        id: updatedUser._id.toString(),
+        name: updatedUser.fullName,
+        image: getUserAvatar(updatedUser),
+      });
+      console.log(`Stream user updated after language change for ${updatedUser.fullName}`);
+    } catch (streamError) {
+      console.log("Error updating Stream user during language change:", streamError.message);
+    }
+
+    res.status(200).json({ success: true, user: updatedUser });
+  } catch (error) {
+    console.error("Update learning language error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}

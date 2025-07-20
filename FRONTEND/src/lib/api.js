@@ -39,6 +39,26 @@ export async function getRecommendedUsers() {
   return response.data;
 }
 
+export async function getCoLearners() {
+  const response = await axiosInstance.get("/users/co-learners");
+  return response.data;
+}
+
+export async function getNativeSpeakers() {
+  const response = await axiosInstance.get("/users/native-speakers");
+  return response.data;
+}
+
+export async function searchUsers(query) {
+  const response = await axiosInstance.get(`/users/search?q=${encodeURIComponent(query)}`);
+  return response.data;
+}
+
+export async function updateLearningLanguage(data) {
+  const response = await axiosInstance.put("/auth/update-learning-language", data);
+  return response.data;
+}
+
 export async function getOutgoingFriendReqs() {
   const response = await axiosInstance.get("/users/outgoing-friend-requests");
   return response.data;
