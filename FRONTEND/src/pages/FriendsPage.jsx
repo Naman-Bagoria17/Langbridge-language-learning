@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { getUserFriends } from "../lib/api";
-import { MapPinIcon, MessageCircleIcon } from "lucide-react";
+import { MapPinIcon, MessageCircleIcon, InfoIcon } from "lucide-react";
 import { capitialize } from "../lib/utils";
 import { getLanguageFlag } from "../components/FriendCard";
 import NoFriendsFound from "../components/NoFriendsFound";
@@ -56,10 +56,23 @@ const FriendsPage = () => {
                     </div>
                   </div>
 
-                  <h4 className="text-xl font-bold text-base-content mb-1">{friend.fullName}</h4>
+                  <div className="flex items-center gap-2 justify-center">
+                    <h4 className="text-xl font-bold text-base-content mb-1">{friend.fullName}</h4>
+                    {friend.bio && (
+                      <div className="relative">
+                        <InfoIcon className="w-4 h-4 text-base-content/40 hover:text-primary cursor-help transition-colors peer" />
+                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-base-300 text-base-content text-xs rounded-lg shadow-lg opacity-0 peer-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 max-w-xs">
+                          <div className="text-center">
+                            <p className="leading-relaxed">{friend.bio}</p>
+                          </div>
+                          <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-base-300"></div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
                   {friend.location && (
-                    <div className="flex items-center gap-1 text-base-content/60 text-sm">
+                    <div className="flex items-center gap-1 text-base-content/60 text-sm justify-center">
                       <MapPinIcon className="w-3 h-3" />
                       {friend.location}
                     </div>
@@ -85,19 +98,8 @@ const FriendsPage = () => {
                   </div>
                 </div>
 
-                {/* Bio */}
-                <div className="flex-1 mb-6">
-                  {friend.bio ? (
-                    <div className="bg-base-100/30 rounded-xl p-4 border border-base-300/20">
-                      <p className="text-xs text-base-content/60 uppercase tracking-wide font-medium mb-2">About</p>
-                      <p className="text-sm text-base-content/80 leading-relaxed line-clamp-3">{friend.bio}</p>
-                    </div>
-                  ) : (
-                    <div className="bg-base-100/20 rounded-xl p-4 border border-dashed border-base-300/40">
-                      <p className="text-xs text-base-content/40 text-center italic">No bio available</p>
-                    </div>
-                  )}
-                </div>
+                {/* Spacer to push button to bottom */}
+                <div className="flex-1 mb-6"></div>
 
                 {/* Action Button */}
                 <Link

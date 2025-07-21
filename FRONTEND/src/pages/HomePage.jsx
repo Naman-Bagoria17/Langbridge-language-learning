@@ -8,7 +8,7 @@ import {
   getLanguageTeachers,
   getFriendRequests,
 } from "../lib/api";
-import { CheckCircleIcon, MapPinIcon, UserPlusIcon } from "lucide-react";
+import { CheckCircleIcon, MapPinIcon, UserPlusIcon, InfoIcon } from "lucide-react";
 import { capitialize } from "../lib/utils";
 import { getLanguageFlag } from "../components/FriendCard";
 import { getUserAvatar } from "../utils/avatar";
@@ -106,7 +106,7 @@ const HomePage = () => {
       {/* Header */}
       <div className="p-6 border-b-2 border-base-content/10">
         <h1 className="text-3xl font-bold text-base-content">Discover Language Partners</h1>
-        <p className="text-base-content/70 mt-2">Connect with co-learners and native speakers</p>
+        <p className="text-base-content/70 mt-2">Connect with co-learners, native speakers, and language teachers</p>
       </div>
 
       {/* Main Content - Three Column Layout */}
@@ -155,7 +155,20 @@ const HomePage = () => {
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-bold text-base-content mb-0.5">{user.fullName}</h4>
+                          <div className="flex items-center gap-1 mb-0.5">
+                            <h4 className="text-sm font-bold text-base-content">{user.fullName}</h4>
+                            {user.bio && (
+                              <div className="relative">
+                                <InfoIcon className="w-3 h-3 text-base-content/40 hover:text-primary cursor-help transition-colors peer" />
+                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-base-300 text-base-content text-xs rounded-lg shadow-lg opacity-0 peer-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 max-w-xs">
+                                  <div className="text-center">
+                                    <p className="leading-relaxed">{user.bio}</p>
+                                  </div>
+                                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-base-300"></div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
 
                           {user.location && (
                             <div className="flex items-center gap-1 text-base-content/60 text-xs">
@@ -205,11 +218,7 @@ const HomePage = () => {
                           </div>
                         </div>
 
-                        {user.bio && (
-                          <div className="flex-1 bg-base-200/50 rounded-md p-2 border border-base-content/10">
-                            <p className="text-xs text-base-content/70 leading-relaxed line-clamp-1 italic">"{user.bio}"</p>
-                          </div>
-                        )}
+
                       </div>
                     </div>
                   );
@@ -254,7 +263,7 @@ const HomePage = () => {
                           <img
                             src={getUserAvatar(user)}
                             alt={user.fullName}
-                            className="w-12 h-12 rounded-full object-cover ring-2 ring-secondary/30 group-hover:ring-secondary/50 transition-all duration-300"
+                            className="w-12 h-12 rounded-full object-cover ring-2 ring-primary/30 group-hover:ring-primary/50 transition-all duration-300"
                           />
                           <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-success rounded-full border-2 border-base-100 flex items-center justify-center">
                             <div className="w-1 h-1 bg-success-content rounded-full"></div>
@@ -262,7 +271,20 @@ const HomePage = () => {
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-bold text-base-content mb-0.5">{user.fullName}</h4>
+                          <div className="flex items-center gap-1 mb-0.5">
+                            <h4 className="text-sm font-bold text-base-content">{user.fullName}</h4>
+                            {user.bio && (
+                              <div className="relative">
+                                <InfoIcon className="w-3 h-3 text-base-content/40 hover:text-primary cursor-help transition-colors peer" />
+                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-base-300 text-base-content text-xs rounded-lg shadow-lg opacity-0 peer-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 max-w-xs">
+                                  <div className="text-center">
+                                    <p className="leading-relaxed">{user.bio}</p>
+                                  </div>
+                                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-base-300"></div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
 
                           {user.location && (
                             <div className="flex items-center gap-1 text-base-content/60 text-xs">
@@ -277,7 +299,7 @@ const HomePage = () => {
                           disabled={alreadyRequested || isPending}
                           className={`btn btn-xs rounded-md shadow-sm hover:shadow-md transition-all duration-300 flex-shrink-0 ${alreadyRequested
                             ? "btn-success"
-                            : "btn-secondary"
+                            : "btn-primary"
                             }`}
                         >
                           {alreadyRequested ? (
@@ -296,11 +318,11 @@ const HomePage = () => {
 
                       {/* Languages and Bio Section */}
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 p-1.5 bg-secondary/10 rounded-md border border-secondary/30">
+                        <div className="flex items-center gap-2 p-1.5 bg-primary/10 rounded-md border border-primary/30">
                           <div className="text-sm">{getLanguageFlag(user.nativeLanguage)}</div>
                           <div>
-                            <p className="text-xs text-secondary/70 uppercase tracking-wide font-medium">Native</p>
-                            <p className="text-xs font-semibold text-secondary">{capitialize(user.nativeLanguage)}</p>
+                            <p className="text-xs text-primary/70 uppercase tracking-wide font-medium">Native</p>
+                            <p className="text-xs font-semibold text-primary">{capitialize(user.nativeLanguage)}</p>
                           </div>
                         </div>
 
@@ -312,11 +334,7 @@ const HomePage = () => {
                           </div>
                         </div>
 
-                        {user.bio && (
-                          <div className="flex-1 bg-base-200/50 rounded-md p-2 border border-base-content/10">
-                            <p className="text-xs text-base-content/70 leading-relaxed line-clamp-1 italic">"{user.bio}"</p>
-                          </div>
-                        )}
+
                       </div>
                     </div>
                   );
@@ -361,7 +379,7 @@ const HomePage = () => {
                           <img
                             src={getUserAvatar(user)}
                             alt={user.fullName}
-                            className="w-12 h-12 rounded-full object-cover ring-2 ring-accent/30 group-hover:ring-accent/50 transition-all duration-300"
+                            className="w-12 h-12 rounded-full object-cover ring-2 ring-primary/30 group-hover:ring-primary/50 transition-all duration-300"
                           />
                           <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-success rounded-full border-2 border-base-100 flex items-center justify-center">
                             <div className="w-1 h-1 bg-success-content rounded-full"></div>
@@ -369,7 +387,20 @@ const HomePage = () => {
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-bold text-base-content mb-0.5">{user.fullName}</h4>
+                          <div className="flex items-center gap-1 mb-0.5">
+                            <h4 className="text-sm font-bold text-base-content">{user.fullName}</h4>
+                            {user.bio && (
+                              <div className="relative">
+                                <InfoIcon className="w-3 h-3 text-base-content/40 hover:text-primary cursor-help transition-colors peer" />
+                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-base-300 text-base-content text-xs rounded-lg shadow-lg opacity-0 peer-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 max-w-xs">
+                                  <div className="text-center">
+                                    <p className="leading-relaxed">{user.bio}</p>
+                                  </div>
+                                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-base-300"></div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
 
                           {user.location && (
                             <div className="flex items-center gap-1 text-base-content/60 text-xs">
@@ -384,7 +415,7 @@ const HomePage = () => {
                           disabled={alreadyRequested || isPending}
                           className={`btn btn-xs rounded-md shadow-sm hover:shadow-md transition-all duration-300 flex-shrink-0 ${alreadyRequested
                             ? "btn-success"
-                            : "btn-accent"
+                            : "btn-primary"
                             }`}
                         >
                           {alreadyRequested ? (
@@ -403,11 +434,11 @@ const HomePage = () => {
 
                       {/* Languages and Bio Section */}
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 p-1.5 bg-accent/10 rounded-md border border-accent/30">
+                        <div className="flex items-center gap-2 p-1.5 bg-primary/10 rounded-md border border-primary/30">
                           <div className="text-sm">{getLanguageFlag(user.nativeLanguage)}</div>
                           <div>
-                            <p className="text-xs text-accent/70 uppercase tracking-wide font-medium">Native</p>
-                            <p className="text-xs font-semibold text-accent">{capitialize(user.nativeLanguage)}</p>
+                            <p className="text-xs text-primary/70 uppercase tracking-wide font-medium">Native</p>
+                            <p className="text-xs font-semibold text-primary">{capitialize(user.nativeLanguage)}</p>
                           </div>
                         </div>
 
@@ -419,11 +450,7 @@ const HomePage = () => {
                           </div>
                         </div>
 
-                        {user.bio && (
-                          <div className="flex-1 bg-base-200/50 rounded-md p-2 border border-base-content/10">
-                            <p className="text-xs text-base-content/70 leading-relaxed line-clamp-1 italic">"{user.bio}"</p>
-                          </div>
-                        )}
+
                       </div>
                     </div>
                   );

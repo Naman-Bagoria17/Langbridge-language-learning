@@ -29,7 +29,7 @@ export async function getMyFriends(req, res) {
     try {
         const user = await User.findById(req.user.id)
             .select("friends")
-            .populate("friends", "fullName profilePic avatarConfig nativeLanguage learningLanguage email");
+            .populate("friends", "fullName profilePic avatarConfig nativeLanguage learningLanguage email bio location");
 
         res.status(200).json(user.friends);
     } catch (error) {
