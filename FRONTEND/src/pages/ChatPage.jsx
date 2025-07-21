@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import useAuthUser from "../hooks/useAuthUser";
 import { useQuery } from "@tanstack/react-query";
-import { getStreamToken } from "../lib/api";
+import { getStreamToken, getUserFriends } from "../lib/api";
 import { getUserAvatar } from "../utils/avatar";
 
 import {
   Channel,
-  ChannelHeader,
   Chat,
   MessageInput,
-  MessageList,
   Thread,
   Window,
 } from "stream-chat-react";
@@ -19,11 +17,14 @@ import toast from "react-hot-toast";
 
 import ChatLoader from "../components/ChatLoader";
 import CallButton from "../components/CallButton";
+import CustomMessageList from "../components/CustomMessageList";
+import { ArrowLeftIcon } from "lucide-react";
 
 const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
 
 const ChatPage = () => {
   const { id: targetUserId } = useParams();
+  const navigate = useNavigate();
   const [chatClient, setChatClient] = useState(null);
   const [channel, setChannel] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -34,6 +35,15 @@ const ChatPage = () => {
     queryFn: getStreamToken,
     enabled: !!authUser,
   });
+
+  const { data: friends = [] } = useQuery({
+    queryKey: ["friends"],
+    queryFn: getUserFriends,
+    enabled: !!authUser,
+  });
+
+  // Find the friend we're chatting with
+  const currentFriend = friends.find(friend => friend._id === targetUserId);
 
   useEffect(() => {
     let client = null;
@@ -123,18 +133,32 @@ const ChatPage = () => {
     }
   };
 
+  const handleBackClick = () => {
+    navigate('/friends');
+  };
+
   if (loading || !chatClient || !channel) return <ChatLoader />;
 
   return (
     <div className="w-full h-full bg-base-100">
-      <div className="h-[calc(100vh-4rem)]">
+      {/* Back Arrow Button - Outside chat card */}
+      <div className="p-4 pb-0">
+        <button
+          onClick={handleBackClick}
+          className="btn btn-sm btn-ghost hover:btn-base-200 transition-all duration-200 flex items-center gap-2"
+          title="Back to Friends"
+        >
+          <ArrowLeftIcon className="w-100 h-100" strokeWidth={2.5} />
+        </button>
+      </div>
+
+      <div className="h-[calc(100vh-8rem)] px-4 pb-4">
         <Chat client={chatClient}>
           <Channel channel={channel}>
             <div className="w-full h-full relative rounded-xl overflow-hidden bg-base-100 border border-base-content/10 shadow-lg">
-              <CallButton handleVideoCall={handleVideoCall} />
+              <CallButton handleVideoCall={handleVideoCall} friend={currentFriend} />
               <Window>
-                <ChannelHeader />
-                <MessageList />
+                <CustomMessageList />
                 <MessageInput focus />
               </Window>
               <Thread />

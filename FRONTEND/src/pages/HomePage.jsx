@@ -160,11 +160,11 @@ const HomePage = () => {
                             {user.bio && (
                               <div className="relative">
                                 <InfoIcon className="w-3 h-3 text-base-content/40 hover:text-primary cursor-help transition-colors peer" />
-                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-base-300 text-base-content text-xs rounded-lg shadow-lg opacity-0 peer-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 max-w-xs">
-                                  <div className="text-center">
+                                <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-3 py-2 bg-base-300 text-base-content text-xs rounded-lg shadow-lg opacity-0 peer-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 max-w-xs">
+                                  <div className="text-left">
                                     <p className="leading-relaxed">{user.bio}</p>
                                   </div>
-                                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-base-300"></div>
+                                  <div className="absolute right-full top-1/2 transform -translate-y-1/2 border-4 border-transparent border-r-base-300"></div>
                                 </div>
                               </div>
                             )}
@@ -276,11 +276,11 @@ const HomePage = () => {
                             {user.bio && (
                               <div className="relative">
                                 <InfoIcon className="w-3 h-3 text-base-content/40 hover:text-primary cursor-help transition-colors peer" />
-                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-base-300 text-base-content text-xs rounded-lg shadow-lg opacity-0 peer-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 max-w-xs">
-                                  <div className="text-center">
+                                <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-3 py-2 bg-base-300 text-base-content text-xs rounded-lg shadow-lg opacity-0 peer-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 max-w-xs">
+                                  <div className="text-left">
                                     <p className="leading-relaxed">{user.bio}</p>
                                   </div>
-                                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-base-300"></div>
+                                  <div className="absolute right-full top-1/2 transform -translate-y-1/2 border-4 border-transparent border-r-base-300"></div>
                                 </div>
                               </div>
                             )}
@@ -392,11 +392,11 @@ const HomePage = () => {
                             {user.bio && (
                               <div className="relative">
                                 <InfoIcon className="w-3 h-3 text-base-content/40 hover:text-primary cursor-help transition-colors peer" />
-                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-base-300 text-base-content text-xs rounded-lg shadow-lg opacity-0 peer-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 max-w-xs">
-                                  <div className="text-center">
+                                <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-3 py-2 bg-base-300 text-base-content text-xs rounded-lg shadow-lg opacity-0 peer-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 max-w-xs">
+                                  <div className="text-left">
                                     <p className="leading-relaxed">{user.bio}</p>
                                   </div>
-                                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-base-300"></div>
+                                  <div className="absolute right-full top-1/2 transform -translate-y-1/2 border-4 border-transparent border-r-base-300"></div>
                                 </div>
                               </div>
                             )}

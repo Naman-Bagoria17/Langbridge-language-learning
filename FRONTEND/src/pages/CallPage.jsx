@@ -163,9 +163,6 @@ const CallContent = () => {
                 : "Returning to home page..."
               }
             </p>
-            <p className="text-xs text-base-content/50">
-              Thank you for using our video call feature! 🎥
-            </p>
           </div>
         </div>
       </div>
