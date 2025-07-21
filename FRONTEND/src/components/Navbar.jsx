@@ -134,7 +134,7 @@ const Navbar = () => {
                         <p className="text-xs text-base-content/60 break-all">{authUser?.email}</p>
                         {authUser?.learningLanguage && (
                           <div className="flex items-center gap-1 mt-1">
-                            <p className="text-sm font-semibold text-primary dark:text-primary-content capitalize">
+                            <p className="text-sm font-semibold capitalize text-base-content bg-base-200">
                               Learning: {authUser.learningLanguage}
                             </p>
                           </div>
