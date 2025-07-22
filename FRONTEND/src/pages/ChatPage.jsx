@@ -30,10 +30,12 @@ const ChatPage = () => {
   const [loading, setLoading] = useState(true);
   const { authUser } = useAuthUser();
 
-  const { data: tokenData } = useQuery({
+  const { data: tokenData, refetch: refetchToken } = useQuery({
     queryKey: ["streamToken"],
     queryFn: getStreamToken,
     enabled: !!authUser,
+    staleTime: 0, // Always fetch fresh token
+    cacheTime: 0, // Don't cache tokens
   });
 
   const { data: friends = [] } = useQuery({
@@ -46,70 +48,98 @@ const ChatPage = () => {
   const currentFriend = friends.find(friend => friend._id === targetUserId);
 
   useEffect(() => {
-    let client = null;
     let isMounted = true;
 
     const initChat = async () => {
+      // Wait for all required data
       if (!tokenData?.token || !authUser || !targetUserId) {
-        setLoading(false);
+        console.log('Waiting for required data...', {
+          hasToken: !!tokenData?.token,
+          hasAuthUser: !!authUser,
+          hasTargetUserId: !!targetUserId
+        });
         return;
       }
 
       try {
-        client = StreamChat.getInstance(STREAM_API_KEY);
+        setLoading(true);
+        console.log('Initializing Stream Chat client...');
 
-        // Check if user is already connected
-        if (client.userID && client.userID !== authUser._id) {
-          await client.disconnectUser();
+        // Create a fresh client instance
+        const client = StreamChat.getInstance(STREAM_API_KEY);
+
+        // Ensure clean state - disconnect any existing connection
+        try {
+          if (client.userID) {
+            console.log('Disconnecting existing user:', client.userID);
+            await client.disconnectUser();
+          }
+        } catch (disconnectError) {
+          console.log('Disconnect error (expected):', disconnectError.message);
         }
 
-        // Only connect if not already connected as this user
-        if (!client.userID || client.userID !== authUser._id) {
-          await client.connectUser(
-            {
-              id: authUser._id,
-              name: authUser.fullName,
-              image: getUserAvatar(authUser),
-            },
-            tokenData.token
-          );
-        }
+        // Small delay to ensure clean state
+        await new Promise(resolve => setTimeout(resolve, 100));
 
-        if (!isMounted) return; // Component unmounted during async operation
+        // Connect user
+        console.log('Connecting user:', authUser._id);
+        await client.connectUser(
+          {
+            id: authUser._id,
+            name: authUser.fullName,
+            image: getUserAvatar(authUser),
+          },
+          tokenData.token
+        );
 
+        console.log('User connected successfully, userID:', client.userID);
+
+        if (!isMounted) return;
+
+        // Create and watch channel
         const channelId = [authUser._id, targetUserId].sort().join("-");
+        console.log('Creating channel:', channelId);
+
         const currChannel = client.channel("messaging", channelId, {
           members: [authUser._id, targetUserId],
         });
 
+        console.log('Watching channel...');
         await currChannel.watch();
+        console.log('Channel ready');
 
-        if (!isMounted) return; // Component unmounted during async operation
+        if (!isMounted) return;
 
         setChatClient(client);
         setChannel(currChannel);
+        setLoading(false);
       } catch (error) {
         console.error("Error initializing chat:", error);
         if (isMounted) {
-          toast.error("Could not connect to chat.");
-        }
-      } finally {
-        if (isMounted) {
+          // Try one more time after a short delay
+          console.log('Retrying chat initialization...');
+          setTimeout(async () => {
+            try {
+              await refetchToken();
+              // The useEffect will trigger again with fresh token
+            } catch (retryError) {
+              console.error('Retry failed:', retryError);
+              toast.error("Could not connect to chat. Please refresh the page.");
+            }
+          }, 1000);
           setLoading(false);
         }
       }
     };
 
-    initChat();
+    // Add a small delay before initializing to ensure all data is ready
+    const timer = setTimeout(initChat, 100);
 
-    // Cleanup function
     return () => {
       isMounted = false;
-      if (client && client.userID) {
-        client.disconnectUser().catch(console.error);
-      }
+      clearTimeout(timer);
     };
-  }, [tokenData?.token, authUser?._id, targetUserId]);
+  }, [tokenData?.token, authUser?._id, targetUserId, refetchToken]);
 
   // Additional cleanup on component unmount
   useEffect(() => {

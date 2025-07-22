@@ -108,8 +108,8 @@ const CallPage = () => {
   if (isLoading || isConnecting) return <PageLoader />;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-100">
-      <div className="w-full max-w-7xl h-[90vh] rounded-lg overflow-hidden shadow-xl">
+    <div className="min-h-screen bg-base-100">
+      <div className="w-full h-screen">
         {client && call ? (
           <StreamVideo client={client}>
             <StreamCall call={call}>
@@ -117,7 +117,9 @@ const CallPage = () => {
             </StreamCall>
           </StreamVideo>
         ) : (
-          <p className="text-center text-base-content/70">Could not initialize call.</p>
+          <div className="flex items-center justify-center h-full">
+            <p className="text-center text-base-content/70">Could not initialize call.</p>
+          </div>
         )}
       </div>
     </div>
@@ -135,15 +137,27 @@ const CallContent = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const returnTo = urlParams.get('returnTo');
 
-      setTimeout(() => {
-        if (returnTo) {
-          // Navigate back to the specified path (e.g., chat page)
-          navigate(decodeURIComponent(returnTo));
-        } else {
-          // Default to home page
-          navigate("/");
+      const timer = setTimeout(() => {
+        try {
+          if (returnTo) {
+            // Navigate back to the specified path (e.g., chat page)
+            const decodedPath = decodeURIComponent(returnTo);
+            console.log('Navigating back to:', decodedPath);
+            navigate(decodedPath, { replace: true });
+          } else {
+            // Default to home page
+            console.log('Navigating to home page');
+            navigate("/", { replace: true });
+          }
+        } catch (error) {
+          console.error('Navigation error:', error);
+          // Fallback to home page
+          navigate("/", { replace: true });
         }
-      }, 1500); // Delay to ensure call cleanup
+      }, 1000); // Reduced delay for better mobile experience
+
+      // Cleanup timer on unmount
+      return () => clearTimeout(timer);
     }
   }, [callingState, navigate]);
 
@@ -152,16 +166,19 @@ const CallContent = () => {
     const returnTo = urlParams.get('returnTo');
 
     return (
-      <div className="flex items-center justify-center h-full bg-base-100">
-        <div className="text-center max-w-md mx-auto p-6">
+      <div className="flex items-center justify-center min-h-screen bg-base-100 p-4">
+        <div className="text-center max-w-sm mx-auto">
           <div className="loading loading-spinner loading-lg text-primary mb-4"></div>
-          <h3 className="text-lg font-semibold text-base-content mb-2">Call Ended</h3>
+          <h3 className="text-lg sm:text-xl font-semibold text-base-content mb-2">Call Ended</h3>
           <div className="space-y-2">
-            <p className="text-base-content/70">
+            <p className="text-sm sm:text-base text-base-content/70">
               {returnTo && returnTo.includes('/chat/')
                 ? "Returning to chat..."
                 : "Returning to home page..."
               }
+            </p>
+            <p className="text-xs text-base-content/50">
+              Please wait...
             </p>
           </div>
         </div>
@@ -171,8 +188,17 @@ const CallContent = () => {
 
   return (
     <StreamTheme>
-      <SpeakerLayout />
-      <CallControls />
+      <div className="relative w-full h-full flex flex-col overflow-hidden">
+        {/* Video Layout - with padding bottom to avoid controls overlap */}
+        <div className="flex-1 relative pb-20">
+          <SpeakerLayout />
+        </div>
+
+        {/* Fixed Controls at Bottom */}
+        <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 z-50 bg-black/30 backdrop-blur-md rounded-full px-4 py-2 shadow-lg">
+          <CallControls />
+        </div>
+      </div>
     </StreamTheme>
   );
 };

@@ -73,11 +73,13 @@ const Navbar = ({ showSidebar = false, onToggleMobileMenu }) => {
           {/* Logo on chat pages */}
           {isChatPage && (
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded-lg flex items-center justify-center">
-                <GraduationCapIcon className="w-3 h-3 sm:w-4 sm:h-4 text-primary-content" />
-              </div>
-              <Link to="/" className="text-lg sm:text-xl font-bold text-base-content hidden sm:block">
-                LangBridge
+              <Link to="/" className="flex items-center gap-2 sm:gap-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded-lg flex items-center justify-center">
+                  <GraduationCapIcon className="w-3 h-3 sm:w-4 sm:h-4 text-primary-content" />
+                </div>
+                <span className="text-lg sm:text-xl font-bold text-base-content hidden sm:block">
+                  LangBridge
+                </span>
               </Link>
             </div>
           )}
