@@ -102,19 +102,19 @@ const HomePage = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full min-h-full flex flex-col">
       {/* Header */}
-      <div className="p-4 sm:p-6 border-b-2 border-base-content/10">
+      <div className="p-4 sm:p-6 border-b-2 border-base-content/10 flex-shrink-0">
         <h1 className="text-2xl sm:text-3xl font-bold text-base-content">Discover Language Partners</h1>
         <p className="text-base-content/70 mt-2 text-sm sm:text-base">Connect with co-learners, native speakers, and language teachers</p>
       </div>
 
       {/* Main Content - Responsive Layout */}
-      <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 sm:p-6 min-h-0 overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 sm:p-6 overflow-y-auto lg:overflow-hidden">
 
         {/* CO-LEARNERS CONTAINER */}
-        <div className="flex-1 bg-base-100 rounded-lg border-2 border-base-content/10 shadow-lg flex flex-col">
-          <div className="p-4 border-b border-base-content/10">
+        <div className="flex-1 bg-base-100 rounded-lg border-2 border-base-content/10 shadow-lg flex flex-col mb-4 lg:mb-0 min-h-[400px] lg:min-h-0">
+          <div className="p-4 border-b border-base-content/10 flex-shrink-0">
             <h2 className="text-xl font-bold text-base-content flex items-center gap-2">
               Co-Learners
               <span className="badge badge-primary badge-sm">{coLearners.length}</span>
@@ -229,8 +229,8 @@ const HomePage = () => {
         </div>
 
         {/* NATIVE SPEAKERS CONTAINER */}
-        <div className="flex-1 bg-base-100 rounded-lg border-2 border-base-content/10 shadow-lg flex flex-col">
-          <div className="p-4 border-b border-base-content/10">
+        <div className="flex-1 bg-base-100 rounded-lg border-2 border-base-content/10 shadow-lg flex flex-col mb-4 lg:mb-0 min-h-[400px] lg:min-h-0">
+          <div className="p-4 border-b border-base-content/10 flex-shrink-0">
             <h2 className="text-xl font-bold text-base-content flex items-center gap-2">
               Native Speakers
               <span className="badge badge-primary badge-sm">{nativeSpeakers.length}</span>
@@ -345,8 +345,8 @@ const HomePage = () => {
         </div>
 
         {/* LANGUAGE TEACHERS CONTAINER */}
-        <div className="flex-1 bg-base-100 rounded-lg border-2 border-base-content/10 shadow-lg flex flex-col">
-          <div className="p-4 border-b border-base-content/10">
+        <div className="flex-1 bg-base-100 rounded-lg border-2 border-base-content/10 shadow-lg flex flex-col min-h-[400px] lg:min-h-0">
+          <div className="p-4 border-b border-base-content/10 flex-shrink-0">
             <h2 className="text-xl font-bold text-base-content flex items-center gap-2">
               Language Teachers
               <span className="badge badge-primary badge-sm">{languageTeachers.length}</span>
