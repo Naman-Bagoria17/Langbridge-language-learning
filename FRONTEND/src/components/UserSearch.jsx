@@ -90,19 +90,19 @@ const UserSearch = () => {
     <div className="relative" ref={searchRef}>
       {/* Search Input */}
       <div className="relative">
-        <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-base-content/50" />
+        <SearchIcon className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 text-base-content/50" />
         <input
           type="text"
           placeholder="Search users..."
           value={searchQuery}
           onChange={handleInputChange}
-          className="input input-bordered input-sm w-96 pl-10 bg-base-100 border-base-content/20 focus:border-primary focus:outline-none transition-colors duration-200"
+          className="input input-bordered input-sm w-full max-w-xs sm:max-w-sm lg:max-w-md xl:max-w-lg pl-8 sm:pl-10 bg-base-100 border-base-content/20 focus:border-primary focus:outline-none transition-colors duration-200 text-sm"
         />
       </div>
 
       {/* Search Results Dropdown */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-base-100 border border-base-300 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-base-100 border border-base-300 rounded-lg shadow-xl z-50 max-h-80 sm:max-h-96 overflow-y-auto min-w-[280px] sm:min-w-0">
           {isLoading ? (
             <div className="p-4 text-center">
               <span className="loading loading-spinner loading-sm"></span>
@@ -127,10 +127,10 @@ const UserSearch = () => {
                 return (
                   <div
                     key={user._id}
-                    className="flex items-center gap-3 px-4 py-3 hover:bg-base-200 transition-colors"
+                    className="flex items-center gap-3 px-3 sm:px-4 py-3 hover:bg-base-200 transition-colors min-w-0"
                   >
                     {/* Avatar */}
-                    <div className="avatar">
+                    <div className="avatar flex-shrink-0">
                       <div className="w-10 h-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-1">
                         <img
                           src={getUserAvatar(user)}
@@ -141,50 +141,52 @@ const UserSearch = () => {
                     </div>
 
                     {/* User Info */}
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-base-content truncate">
+                    <div className="flex-1 min-w-0 overflow-hidden">
+                      <p className="font-medium text-sm text-base-content truncate">
                         {user.fullName}
                       </p>
-                      <div className="flex items-center gap-2 text-xs text-base-content/70">
+                      <div className="flex flex-col gap-1 text-xs text-base-content/70">
                         {user.nativeLanguage && (
-                          <span className="flex items-center gap-1">
-                            {getLanguageFlag(user.nativeLanguage)}
-                            Native: {user.nativeLanguage}
+                          <span className="flex items-center gap-1 truncate">
+                            <span className="flex-shrink-0">{getLanguageFlag(user.nativeLanguage)}</span>
+                            <span className="truncate">Native: {user.nativeLanguage}</span>
                           </span>
                         )}
                         {user.learningLanguage && (
-                          <span className="flex items-center gap-1">
-                            {getLanguageFlag(user.learningLanguage)}
-                            Learning: {user.learningLanguage}
+                          <span className="flex items-center gap-1 truncate">
+                            <span className="flex-shrink-0">{getLanguageFlag(user.learningLanguage)}</span>
+                            <span className="truncate">Learning: {user.learningLanguage}</span>
                           </span>
                         )}
                       </div>
                     </div>
 
                     {/* Status Button */}
-                    {isFriend ? (
-                      <div className="btn btn-xs btn-success btn-disabled">
-                        <CheckCircleIcon className="w-3 h-3" />
-                        Friends
-                      </div>
-                    ) : alreadyRequested ? (
-                      <div className="btn btn-xs btn-warning btn-disabled">
-                        <CheckCircleIcon className="w-3 h-3" />
-                        Sent
-                      </div>
-                    ) : (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSendFriendRequest(user._id);
-                        }}
-                        disabled={sendingRequest}
-                        className="btn btn-xs btn-primary"
-                      >
-                        <UserPlusIcon className="w-3 h-3" />
-                        Add
-                      </button>
-                    )}
+                    <div className="flex-shrink-0">
+                      {isFriend ? (
+                        <div className="btn btn-xs btn-success btn-disabled">
+                          <CheckCircleIcon className="w-3 h-3" />
+                          <span className="hidden sm:inline">Friends</span>
+                        </div>
+                      ) : alreadyRequested ? (
+                        <div className="btn btn-xs btn-warning btn-disabled">
+                          <CheckCircleIcon className="w-3 h-3" />
+                          <span className="hidden sm:inline">Sent</span>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSendFriendRequest(user._id);
+                          }}
+                          disabled={sendingRequest}
+                          className="btn btn-xs btn-primary"
+                        >
+                          <UserPlusIcon className="w-3 h-3" />
+                          <span className="hidden sm:inline">Add</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
                 );
               })}

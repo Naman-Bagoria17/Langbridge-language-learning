@@ -17,7 +17,7 @@ const CustomMessageList = () => {
   );
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 pt-20 space-y-1">
+    <div className="flex-1 overflow-y-auto p-2 sm:p-4 pt-16 sm:pt-20 space-y-1">
       {regularMessages.length === 0 ? (
         <div className="flex items-center justify-center h-full">
           <div className="text-center">

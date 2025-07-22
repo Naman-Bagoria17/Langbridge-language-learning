@@ -142,20 +142,20 @@ const ChatPage = () => {
   return (
     <div className="w-full h-full bg-base-100">
       {/* Back Arrow Button - Outside chat card */}
-      <div className="p-4 pb-0">
+      <div className="p-2 sm:p-4 pb-0">
         <button
           onClick={handleBackClick}
           className="btn btn-sm btn-ghost hover:btn-base-200 transition-all duration-200 flex items-center gap-2"
           title="Back to Friends"
         >
-          <ArrowLeftIcon className="w-100 h-100" strokeWidth={2.5} />
+          <ArrowLeftIcon className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
         </button>
       </div>
 
-      <div className="h-[calc(100vh-8rem)] px-4 pb-4">
+      <div className="h-[calc(100vh-6rem)] sm:h-[calc(100vh-8rem)] px-2 sm:px-4 pb-2 sm:pb-4">
         <Chat client={chatClient}>
           <Channel channel={channel}>
-            <div className="w-full h-full relative rounded-xl overflow-hidden bg-base-100 border border-base-content/10 shadow-lg">
+            <div className="w-full h-full relative rounded-lg sm:rounded-xl overflow-hidden bg-base-100 border border-base-content/10 shadow-lg">
               <CallButton handleVideoCall={handleVideoCall} friend={currentFriend} />
               <Window>
                 <CustomMessageList />

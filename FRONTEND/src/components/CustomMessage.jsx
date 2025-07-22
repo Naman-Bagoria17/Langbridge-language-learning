@@ -41,14 +41,14 @@ const CustomMessage = ({ message }) => {
   return (
     <div className={`flex w-full mb-2 ${isOwn ? 'justify-end' : 'justify-start'}`}>
       <div
-        className={`max-w-xs lg:max-w-md px-3 py-2 rounded-2xl shadow-sm ${isOwn
+        className={`max-w-xs sm:max-w-sm lg:max-w-md px-2 sm:px-3 py-1.5 sm:py-2 rounded-2xl shadow-sm ${isOwn
           ? 'bg-primary text-primary-content rounded-br-md'
           : 'bg-base-200 text-base-content rounded-bl-md'
           }`}
       >
         {/* Message Text and Timestamp in same line */}
-        <div className="flex items-end gap-2">
-          <div className="text-sm leading-relaxed flex-1">
+        <div className="flex items-end gap-1 sm:gap-2">
+          <div className="text-xs sm:text-sm leading-relaxed flex-1">
             {renderMessageText(message.text)}
           </div>
           <div

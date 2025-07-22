@@ -17,19 +17,19 @@ const FriendsPage = () => {
   return (
     <div className="w-full h-screen flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b border-base-300">
+      <div className="p-4 sm:p-6 border-b border-base-300">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-base-content flex items-center gap-3">
+            <h1 className="text-2xl sm:text-3xl font-bold text-base-content flex items-center gap-2 sm:gap-3">
               Your Friends
-              <span className="badge badge-primary badge-lg">{friends.length}</span>
+              <span className="badge badge-primary badge-sm sm:badge-lg">{friends.length}</span>
             </h1>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6">
         {loadingFriends ? (
           <div className="flex justify-center py-12">
             <span className="loading loading-spinner loading-lg text-primary"></span>
@@ -41,7 +41,7 @@ const FriendsPage = () => {
             {friends.map((friend) => (
               <div
                 key={friend._id}
-                className="group bg-gradient-to-br from-base-100 to-base-200 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-base-300/50 h-full flex flex-col"
+                className="group bg-gradient-to-br from-base-100 to-base-200 rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-base-300/50 h-full flex flex-col"
               >
                 {/* Header with Avatar and Name */}
                 <div className="flex flex-col items-center text-center mb-6">

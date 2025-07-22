@@ -5,6 +5,7 @@ import {
   LogOutIcon,
   GraduationCapIcon,
   GlobeIcon,
+  MenuIcon,
 } from "lucide-react";
 import ThemeSelector from "./ThemeSelector";
 import useLogout from "../hooks/useLogout";
@@ -12,11 +13,11 @@ import { getUserAvatar } from "../utils/avatar";
 import UserSearch from "./UserSearch";
 import LanguageSelector from "./LanguageSelector";
 import { useState, useRef, useEffect } from "react";
-import { capitialize } from "../lib/utils";
+
 import { useQuery } from "@tanstack/react-query";
 import { getFriendRequests } from "../lib/api";
 
-const Navbar = () => {
+const Navbar = ({ showSidebar = false, onToggleMobileMenu }) => {
   const { authUser } = useAuthUser();
   const location = useLocation();
   const isChatPage = location.pathname?.startsWith("/chat");
@@ -55,26 +56,42 @@ const Navbar = () => {
 
   return (
     <nav className="navbar bg-base-200 border-b border-base-300 sticky top-0 z-30">
-      <div className="container mx-auto px-4 flex items-center justify-between w-full">
-        {/* Logo on chat pages */}
-        {isChatPage && (
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <GraduationCapIcon className="w-4 h-4 text-primary-content" />
+      <div className="container mx-auto px-2 sm:px-4 flex items-center justify-between w-full">
+        {/* Left Side - Hamburger Menu and Logo */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Hamburger Menu for Mobile */}
+          {showSidebar && (
+            <button
+              onClick={onToggleMobileMenu}
+              className="btn btn-ghost btn-sm btn-circle lg:hidden"
+              aria-label="Toggle menu"
+            >
+              <MenuIcon className="w-5 h-5" />
+            </button>
+          )}
+
+          {/* Logo on chat pages */}
+          {isChatPage && (
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded-lg flex items-center justify-center">
+                <GraduationCapIcon className="w-3 h-3 sm:w-4 sm:h-4 text-primary-content" />
+              </div>
+              <Link to="/" className="text-lg sm:text-xl font-bold text-base-content hidden sm:block">
+                LangBridge
+              </Link>
             </div>
-            <Link to="/" className="text-xl font-bold text-base-content">
-              LangBridge
-            </Link>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Center - Search */}
-        <div className="flex-1 flex justify-center max-w-4xl mx-4">
-          <UserSearch />
+        <div className="flex-1 flex justify-center max-w-4xl mx-2 sm:mx-4 min-w-0">
+          <div className="w-full max-w-xs sm:max-w-md lg:max-w-lg xl:max-w-xl">
+            <UserSearch />
+          </div>
         </div>
 
         {/* Right Side */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <Link to="/notifications">
             <button className={`btn btn-ghost btn-circle transition-all duration-300 ${hasUnreadNotifications ? 'hover:bg-primary/10 bg-primary/5' : 'hover:bg-base-300'}`}>
               <div className="indicator">
@@ -98,17 +115,19 @@ const Navbar = () => {
             </button>
           </Link>
 
-          {/* Theme Selector */}
-          <ThemeSelector />
+          {/* Theme Selector - Hidden on small screens */}
+          <div className="hidden sm:block">
+            <ThemeSelector />
+          </div>
 
           {/* User Profile Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="btn btn-ghost flex items-center gap-2"
+              className="btn btn-ghost btn-sm sm:btn-md flex items-center gap-1 sm:gap-2"
             >
               <div className="avatar">
-                <div className="w-8 h-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-1">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-1">
                   <img
                     src={getUserAvatar(authUser)}
                     alt="Profile"
@@ -120,7 +139,7 @@ const Navbar = () => {
 
             {/* Custom Dropdown Menu */}
             {isDropdownOpen && (
-              <div className="absolute right-0 top-full mt-2 w-80 bg-base-100 rounded-xl shadow-2xl border-2 border-base-content/10 z-50">
+              <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-base-100 rounded-xl shadow-2xl border-2 border-base-content/10 z-50">
                 <ul className="menu p-0">
                   <li className="border-b border-base-content/10 px-3 py-3">
                     <div className="flex items-start gap-3 min-w-0">
@@ -140,6 +159,15 @@ const Navbar = () => {
                           </div>
                         )}
                       </div>
+                    </div>
+                  </li>
+
+                  {/* Theme Selector for Mobile */}
+                  <li className="border-b border-base-content/10 sm:hidden">
+                    <div className="px-3 py-2">
+                      <div className="flex items-center gap-3 mb-2">
+                      </div>
+                      <ThemeSelector />
                     </div>
                   </li>
 

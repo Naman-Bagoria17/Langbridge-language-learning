@@ -102,15 +102,15 @@ const HomePage = () => {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col">
+    <div className="w-full h-full flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b-2 border-base-content/10">
-        <h1 className="text-3xl font-bold text-base-content">Discover Language Partners</h1>
-        <p className="text-base-content/70 mt-2">Connect with co-learners, native speakers, and language teachers</p>
+      <div className="p-4 sm:p-6 border-b-2 border-base-content/10">
+        <h1 className="text-2xl sm:text-3xl font-bold text-base-content">Discover Language Partners</h1>
+        <p className="text-base-content/70 mt-2 text-sm sm:text-base">Connect with co-learners, native speakers, and language teachers</p>
       </div>
 
-      {/* Main Content - Three Column Layout */}
-      <div className="flex-1 flex gap-4 p-6 min-h-0">
+      {/* Main Content - Responsive Layout */}
+      <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 sm:p-6 min-h-0 overflow-hidden">
 
         {/* CO-LEARNERS CONTAINER */}
         <div className="flex-1 bg-base-100 rounded-lg border-2 border-base-content/10 shadow-lg flex flex-col">
@@ -139,7 +139,7 @@ const HomePage = () => {
                   return (
                     <div
                       key={user._id}
-                      className="group bg-base-100 hover:bg-base-200 rounded-lg p-3 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 border border-base-content/10 hover:border-base-content/20"
+                      className="group bg-base-100 hover:bg-base-200 rounded-lg p-2 sm:p-3 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 border border-base-content/10 hover:border-base-content/20"
                     >
                       {/* Header with Avatar and Name */}
                       <div className="flex items-start gap-3 mb-3">
@@ -147,7 +147,7 @@ const HomePage = () => {
                           <img
                             src={getUserAvatar(user)}
                             alt={user.fullName}
-                            className="w-12 h-12 rounded-full object-cover ring-2 ring-primary/30 group-hover:ring-primary/50 transition-all duration-300"
+                            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover ring-2 ring-primary/30 group-hover:ring-primary/50 transition-all duration-300"
                           />
                           <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-success rounded-full border-2 border-base-100 flex items-center justify-center">
                             <div className="w-1 h-1 bg-success-content rounded-full"></div>
@@ -156,7 +156,7 @@ const HomePage = () => {
 
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1 mb-0.5">
-                            <h4 className="text-sm font-bold text-base-content">{user.fullName}</h4>
+                            <h4 className="text-xs sm:text-sm font-bold text-base-content">{user.fullName}</h4>
                             {user.bio && (
                               <div className="relative">
                                 <InfoIcon className="w-3 h-3 text-base-content/40 hover:text-primary cursor-help transition-colors peer" />
