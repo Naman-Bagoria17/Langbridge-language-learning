@@ -84,8 +84,8 @@ const Navbar = ({ showSidebar = false, onToggleMobileMenu }) => {
         </div>
 
         {/* Center - Search */}
-        <div className="flex-1 flex justify-center max-w-4xl mx-2 sm:mx-4 min-w-0">
-          <div className="w-full max-w-xs sm:max-w-md lg:max-w-lg xl:max-w-xl">
+        <div className="flex-1 flex justify-center mx-2 sm:mx-4 min-w-0">
+          <div className="w-full max-w-xs sm:max-w-sm lg:max-w-md">
             <UserSearch />
           </div>
         </div>

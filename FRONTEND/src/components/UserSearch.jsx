@@ -96,13 +96,13 @@ const UserSearch = () => {
           placeholder="Search users..."
           value={searchQuery}
           onChange={handleInputChange}
-          className="input input-bordered input-sm w-full max-w-xs sm:max-w-sm lg:max-w-md xl:max-w-lg pl-8 sm:pl-10 bg-base-100 border-base-content/20 focus:border-primary focus:outline-none transition-colors duration-200 text-sm"
+          className="input input-bordered input-sm w-full max-w-xs sm:max-w-sm lg:max-w-md pl-8 sm:pl-10 bg-base-100 border-base-content/20 focus:border-primary focus:outline-none transition-colors duration-200 text-sm"
         />
       </div>
 
       {/* Search Results Dropdown */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-base-100 border border-base-300 rounded-lg shadow-xl z-50 max-h-80 sm:max-h-96 overflow-y-auto min-w-[280px] sm:min-w-0">
+        <div className="absolute top-full left-0 mt-1 bg-base-100 border border-base-300 rounded-lg shadow-xl z-50 max-h-80 sm:max-h-96 overflow-y-auto w-80 sm:w-96">
           {isLoading ? (
             <div className="p-4 text-center">
               <span className="loading loading-spinner loading-sm"></span>
@@ -127,7 +127,7 @@ const UserSearch = () => {
                 return (
                   <div
                     key={user._id}
-                    className="flex items-center gap-3 px-3 sm:px-4 py-3 hover:bg-base-200 transition-colors min-w-0"
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-base-200 transition-colors"
                   >
                     {/* Avatar */}
                     <div className="avatar flex-shrink-0">
@@ -141,20 +141,20 @@ const UserSearch = () => {
                     </div>
 
                     {/* User Info */}
-                    <div className="flex-1 min-w-0 overflow-hidden">
+                    <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm text-base-content truncate">
                         {user.fullName}
                       </p>
                       <div className="flex flex-col gap-1 text-xs text-base-content/70">
                         {user.nativeLanguage && (
-                          <span className="flex items-center gap-1 truncate">
-                            <span className="flex-shrink-0">{getLanguageFlag(user.nativeLanguage)}</span>
+                          <span className="flex items-center gap-1">
+                            {getLanguageFlag(user.nativeLanguage)}
                             <span className="truncate">Native: {user.nativeLanguage}</span>
                           </span>
                         )}
                         {user.learningLanguage && (
-                          <span className="flex items-center gap-1 truncate">
-                            <span className="flex-shrink-0">{getLanguageFlag(user.learningLanguage)}</span>
+                          <span className="flex items-center gap-1">
+                            {getLanguageFlag(user.learningLanguage)}
                             <span className="truncate">Learning: {user.learningLanguage}</span>
                           </span>
                         )}
@@ -166,12 +166,12 @@ const UserSearch = () => {
                       {isFriend ? (
                         <div className="btn btn-xs btn-success btn-disabled">
                           <CheckCircleIcon className="w-3 h-3" />
-                          <span className="hidden sm:inline">Friends</span>
+                          Friends
                         </div>
                       ) : alreadyRequested ? (
                         <div className="btn btn-xs btn-warning btn-disabled">
                           <CheckCircleIcon className="w-3 h-3" />
-                          <span className="hidden sm:inline">Sent</span>
+                          Sent
                         </div>
                       ) : (
                         <button
@@ -183,7 +183,7 @@ const UserSearch = () => {
                           className="btn btn-xs btn-primary"
                         >
                           <UserPlusIcon className="w-3 h-3" />
-                          <span className="hidden sm:inline">Add</span>
+                          Add
                         </button>
                       )}
                     </div>
