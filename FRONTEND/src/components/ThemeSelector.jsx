@@ -38,10 +38,17 @@ const themes = [
 const ThemeSelector = () => {
   const getInitialTheme = () => {
     try {
-      return localStorage.getItem("langbridge-theme") || "dark";
+      const savedTheme = localStorage.getItem("langbridge-theme");
+
+      // If no theme is saved (first-time user), return forest as default
+      if (!savedTheme) {
+        return "forest";
+      }
+
+      return savedTheme;
     } catch (error) {
       console.warn("Failed to load theme from localStorage:", error);
-      return "dark";
+      return "forest";
     }
   };
 
